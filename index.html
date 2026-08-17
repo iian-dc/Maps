@@ -49,7 +49,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;font-family:Arial,sans-serif
 .vehicle-option.selected .vehicle-start{display:block}
 .close-button{width:100%;border:0;background:transparent;color:#aaa;padding:13px;font-size:14px}
 
-/* CONFIRMACIÓN */
+/* NUEVO: CONFIRMACIÓN DE RECOGIDA */
 .confirm-screen{position:fixed;inset:0;background:#111;z-index:10000;display:none}
 .confirm-screen.show{display:block}
 #confirmMap{position:absolute;inset:0;width:100%;height:100%}
@@ -60,13 +60,9 @@ html,body{margin:0;padding:0;width:100%;height:100%;font-family:Arial,sans-serif
 .confirm-handle{width:55px;height:5px;background:#555;border-radius:10px;margin:0 auto 16px}
 .confirm-title{text-align:center;font-size:21px;font-weight:bold;margin-bottom:6px}
 .confirm-subtitle{text-align:center;color:#aaa;font-size:13px;margin-bottom:16px}
-.confirm-address{background:#1d1d1d;border-radius:14px;padding:13px;margin-bottom:10px}
+.confirm-address{background:#1d1d1d;border-radius:14px;padding:13px;margin-bottom:12px}
 .confirm-label{font-size:10px;color:#aaa;margin-bottom:5px}
 .confirm-address-text{font-size:14px;font-weight:bold;line-height:19px}
-.confirm-info{display:flex;gap:8px;margin-bottom:12px}
-.confirm-info-box{flex:1;background:#1d1d1d;border-radius:12px;padding:10px}
-.confirm-info-label{font-size:10px;color:#aaa;margin-bottom:4px}
-.confirm-info-value{font-size:16px;font-weight:bold;color:#f5c400}
 .confirm-button{width:100%;border:0;border-radius:13px;padding:16px;background:#f5c400;color:#111;font-size:15px;font-weight:bold}
 .confirm-button:disabled{background:#777;color:#aaa}
 .confirm-pin{width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#f5c400;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
@@ -210,6 +206,8 @@ Volver
 </div>
 </div>
 
+<!-- NUEVA VENTANA DE CONFIRMACIÓN -->
+
 <div id="confirmScreen" class="confirm-screen">
 
 <div id="confirmMap"></div>
@@ -245,34 +243,6 @@ PUNTO DE RECOGIDA
 
 <div id="confirmAddressText" class="confirm-address-text">
 Cargando ubicación...
-</div>
-
-</div>
-
-<div class="confirm-info">
-
-<div class="confirm-info-box">
-
-<div class="confirm-info-label">
-DISTANCIA
-</div>
-
-<div id="confirmDistance" class="confirm-info-value">
-0.0 km
-</div>
-
-</div>
-
-<div class="confirm-info-box">
-
-<div class="confirm-info-label">
-PRECIO
-</div>
-
-<div id="confirmPrice" class="confirm-info-value">
-$0.00
-</div>
-
 </div>
 
 </div>
@@ -647,6 +617,8 @@ document.getElementById("motoCheck").innerText="";
 
 };
 
+/* NUEVO MAPA DE CONFIRMACIÓN */
+
 let confirmMap=null;
 let confirmMarker=null;
 let confirmVehicle="";
@@ -659,60 +631,6 @@ html:'<div class="confirm-pin"><div class="confirm-pin-dot"></div></div>',
 iconSize:[40,40],
 iconAnchor:[20,40]
 });
-
-}
-
-function actualizarConfirmacionPrecio(){
-
-const precio=confirmVehicle==="Moto"
-?calcularPrecioMoto(routeDistanceKm)
-:calcularPrecioCarro(routeDistanceKm);
-
-document.getElementById("confirmDistance").innerText=routeDistanceKm.toFixed(1)+" km";
-document.getElementById("confirmPrice").innerText="$"+precio.toFixed(2);
-
-}
-
-async function recalcularRutaPorNuevaRecogida(){
-
-if(pickupLat===null||destinationLat===null){
-return;
-}
-
-document.getElementById("confirmDistance").innerText="Calculando...";
-document.getElementById("confirmPrice").innerText="Calculando...";
-document.getElementById("confirmButton").disabled=true;
-
-try{
-
-const url="https://router.project-osrm.org/route/v1/driving/"+pickupLng+","+pickupLat+";"+destinationLng+","+destinationLat+"?overview=false";
-
-const response=await fetch(url);
-const data=await response.json();
-
-if(!data.routes||data.routes.length===0){
-
-document.getElementById("confirmDistance").innerText="No disponible";
-document.getElementById("confirmPrice").innerText="No disponible";
-return;
-
-}
-
-routeDistanceKm=data.routes[0].distance/1000;
-
-actualizarPrecios();
-actualizarConfirmacionPrecio();
-
-document.getElementById("confirmButton").disabled=false;
-
-}catch(error){
-
-console.log(error);
-
-document.getElementById("confirmDistance").innerText="Error";
-document.getElementById("confirmPrice").innerText="Error";
-
-}
 
 }
 
@@ -772,7 +690,7 @@ pickupMarker=L.marker([lat,lng],{
 icon:pickupIcon()
 }).addTo(map);
 
-await recalcularRutaPorNuevaRecogida();
+document.getElementById("confirmButton").disabled=false;
 
 });
 
@@ -795,8 +713,6 @@ icon:confirmPickupIcon()
 const direccion=await obtenerDireccion(pickupLat,pickupLng);
 
 document.getElementById("confirmAddressText").innerText=direccion;
-
-actualizarConfirmacionPrecio();
 
 document.getElementById("confirmButton").disabled=false;
 
@@ -824,4 +740,73 @@ abrirConfirmacionRecogida("Carro");
 
 };
 
-document.ge
+document.getElementById("confirmButton").onclick=function(){
+
+document.getElementById("confirmScreen").classList.remove("show");
+
+const precio=confirmVehicle==="Moto"
+?calcularPrecioMoto(routeDistanceKm)
+:calcularPrecioCarro(routeDistanceKm);
+
+alert(
+"Viaje iniciado\n\n"+
+"Vehículo: "+confirmVehicle+"\n"+
+"Recogida confirmada\n"+
+"Distancia: "+routeDistanceKm.toFixed(1)+" km\n"+
+"Precio: $"+precio.toFixed(2)
+);
+
+};
+
+document.getElementById("confirmBack").onclick=function(){
+
+document.getElementById("confirmScreen").classList.remove("show");
+
+document.getElementById("vehicleScreen").classList.add("show");
+
+};
+
+document.getElementById("confirmSearch").onclick=function(){
+
+confirmMap.setView([pickupLat,pickupLng],18);
+
+};
+
+document.getElementById("closeVehicle").onclick=function(){
+
+document.getElementById("vehicleScreen").classList.remove("show");
+
+};
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+map.setView([
+position.coords.latitude,
+position.coords.longitude
+],15);
+
+},
+
+function(){
+
+map.setView([21.1561,-100.9333],15);
+
+},
+
+{
+enableHighAccuracy:true,
+timeout:10000
+}
+
+);
+
+}
+
+</script>
+
+</body>
+</html>
