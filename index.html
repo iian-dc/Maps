@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+<title>Moto Transporte</title>
+
+<!-- LEAFLET -->
+<link
+rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+html,
+body{
+margin:0;
+padding:0;
+width:100%;
+min-height:100%;
+font-family:Arial,sans-serif;
+background:#f3f3f3;
+color:#222;
+}
+
+body{
+overflow-x:hidden;
+}
+
+.app{
+width:100%;
+max-width:600px;
+margin:auto;
+background:#fff;
+min-height:100vh;
+position:relative;
+}
+
+/* =========================
+   MAPA
+========================= */
+
+.map-container{
+position:relative;
+width:100%;
+height:55vh;
+min-height:350px;
+}
+
+#map{
+width:100%;
+height:100%;
+min-height:350px;
+background:#d9d9d9;
+}
+
+/* =========================
+   MENSAJE MAPA
+========================= */
+
+.map-message{
+position:absolute;
+top:15px;
+left:50%;
+transform:translateX(-50%);
+z-index:1000;
+
+background:#fff;
+padding:9px 14px;
+
+border-radius:20px;
+
+box-shadow:0 2px 10px rgba(0,0,0,.2);
+
+font-size:12px;
+font-weight:bold;
+
+white-space:nowrap;
+}
+
+/* =========================
+   PANEL
+========================= */
+
+.panel{
+background:#fff;
+
+padding:16px;
+
+border-radius:22px 22px 0 0;
+
+margin-top:-22px;
+
+position:relative;
+
+z-index:1001;
+
+box-shadow:0 -4px 18px rgba(0,0,0,.15);
+}
+
+.title{
+font-size:21px;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.subtitle{
+font-size:13px;
+color:#777;
+margin-bottom:15px;
+}
+
+/* =========================
+   MODO
+========================= */
+
+.mode{
+display:flex;
+gap:8px;
+margin-bottom:10px;
+}
+
+.mode button{
+flex:1;
+
+margin:0;
+
+padding:11px;
+
+border-radius:10px;
+
+border:1px solid #ddd;
+
+background:#fff;
+
+color:#555;
+
+font-size:13px;
+
+font-weight:bold;
+
+transition:.2s;
+}
+
+.mode button.active{
+background:#f5c400;
+
+color:#111;
+
+border-color:#f5c400;
+
+box-shadow:
+0 3px 8px rgba(245,196,0,.25);
+}
+
+/* =========================
+   GPS
+========================= */
+
+.location-button{
+width:100%;
+
+border:1px solid #e0b400;
+
+padding:13px 14px;
+
+border-radius:12px;
+
+margin-bottom:12px;
+
+background:
+linear-gradient(
+135deg,
+#ffd83d,
+#f5c400
+);
+
+color:#111;
+
+font-size:13px;
+
+font-weight:bold;
+
+box-shadow:
+0 4px 10px rgba(0,0,0,.12);
+
+cursor:pointer;
+
+transition:.2s;
+}
+
+.location-button:active{
+transform:scale(.98);
+}
+
+.location-button:disabled{
+opacity:.7;
+}
+
+/* =========================
+   DIRECCIONES
+========================= */
+
+.step{
+padding:13px;
+
+border-radius:13px;
+
+background:#f5f5f5;
+
+margin-bottom:10px;
+}
+
+.step-title{
+font-size:12px;
+
+color:#777;
+
+margin-bottom:5px;
+}
+
+.address{
+font-size:14px;
+
+font-weight:bold;
+
+line-height:19px;
+}
+
+.waiting{
+color:#999;
+
+font-weight:normal;
+}
+
+/* =========================
+   ELEMENTOS ORIGINALES
+   SE OCULTAN DE LA
+   PANTALLA PRINCIPAL
+========================= */
+
+.info{
+display:none;
+}
+
+.price{
+display:none;
+}
+
+/* =========================
+   BOTON INICIAR
+========================= */
+
+.start-button{
+width:100%;
+
+border:none;
+
+padding:16px;
+
+border-radius:14px;
+
+margin-top:14px;
+
+background:#111;
+
+color:#fff;
+
+font-size:17px;
+
+font-weight:bold;
+
+box-shadow:
+0 4px 10px rgba(0,0,0,.20);
+
+display:none;
+
+cursor:pointer;
+}
+
+.start-button.show{
+display:block;
+}
+
+.start-button:active{
+transform:scale(.98);
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status{
+text-align:center;
+
+font-size:12px;
+
+color:#777;
+
+margin-top:9px;
+
+min-height:16px;
+}
+
+/* =========================
+   MARCADORES
+========================= */
+
+.pickup-icon,
+.destination-icon{
+
+width:38px;
+
+height:38px;
+
+border-radius:
+50% 50% 50% 0;
+
+transform:rotate(-45deg);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+box-shadow:
+0 3px 10px rgba(0,0,0,.35);
+
+border:3px solid white;
+}
+
+.pickup-icon{
+background:#f5c400;
+}
+
+.destination-icon{
+background:#111;
+}
+
+.marker-dot{
+width:11px;
+
+height:11px;
+
+background:white;
+
+border-radius:50%;
+}
+
+/* =========================
+   VENTANA VEHICULOS
+========================= */
+
+.vehicle-screen{
+
+position:fixed;
+
+inset:0;
+
+background:
+rgba(0,0,0,.38);
+
+z-index:9998;
+
+display:none;
+
+align-items:flex-end;
+
+justify-content:center;
+}
+
+.vehicle-screen.show{
+display:flex;
+}
+
+.vehicle-panel{
+
+width:100%;
+
+max-width:600px;
+
+background:#111;
+
+color:#fff;
+
+border-radius:
+24px 24px 0 0;
+
+padding:
+12px 14px 18px;
+
+box-shadow:
+0 -8px 30px rgba(0,0,0,.35);
+
+max-height:80vh;
+
+overflow-y:auto;
+}
+
+.vehicle-handle{
+
+width:45px;
+
+height:5px;
+
+border-radius:10px;
+
+background:#777;
+
+margin:
+2px auto 15px;
+}
+
+.vehicle-title{
+
+font-size:20px;
+
+font-weight:bold;
+
+text-align:center;
+
+margin-bottom:15px;
+}
+
+/* =========================
+   DISTANCIA TIEMPO
+========================= */
+
+.vehicle-route-info{
+
+display:flex;
+
+gap:8px;
+
+margin:
+0 0 12px;
+}
+
+.vehicle-route-box{
+
+flex:1;
+
+background:#202020;
+
+border-radius:10px;
+
+padding:9px;
+
+text-align:center;
+}
+
+.vehicle-route-label{
+
+font-size:10px;
+
+color:#999;
+}
+
+.vehicle-route-value{
+
+font-size:14px;
+
+font-weight:bold;
+
+margin-top:4px;
+}
+
+/* =========================
+   VEHICULOS
+========================= */
+
+.vehicle-option{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+padding:12px;
+
+border:
+2px solid transparent;
+
+border-radius:15px;
+
+margin-bottom:9px;
+
+background:#181818;
+
+cursor:pointer;
+
+transition:.2s;
+}
+
+.vehicle-option.selected{
+
+border-color:#fff;
+
+background:#222;
+}
+
+.vehicle-image{
+
+width:82px;
+
+height:62px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:48px;
+
+flex-shrink:0;
+}
+
+.vehicle-info{
+
+flex:1;
+
+min-width:0;
+}
+
+.vehicle-name{
+
+font-size:17px;
+
+font-weight:bold;
+
+margin-bottom:5px;
+}
+
+.vehicle-details{
+
+font-size:12px;
+
+color:#aaa;
+
+line-height:18px;
+}
+
+.vehicle-price{
+
+font-size:18px;
+
+font-weight:bold;
+
+white-space:nowrap;
+
+text-align:right;
+}
+
+.vehicle-price small{
+
+display:block;
+
+font-size:10px;
+
+font-weight:normal;
+
+color:#aaa;
+
+margin-top:3px;
+}
+
+/* =========================
+   CONFIRMAR
+========================= */
+
+.vehicle-confirm{
+
+width:100%;
+
+border:none;
+
+padding:16px;
+
+border-radius:13px;
+
+margin-top:8px;
+
+background:#f5c400;
+
+color:#111;
+
+font-size:16px;
+
+font-weight:bold;
+
+display:none;
+
+cursor:pointer;
+}
+
+.vehicle-confirm.show{
+display:block;
+}
+
+.vehicle-confirm:disabled{
+opacity:.6;
+}
+
+.vehicle-close{
+
+width:100%;
+
+border:none;
+
+padding:12px;
+
+margin-top:7px;
+
+border-radius:12px;
+
+background:#292929;
+
+color:#fff;
+
+font-size:14px;
+
+font-weight:bold;
+
+cursor:pointer;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading-screen{
+
+position:fixed;
+
+inset:0;
+
+background:
+rgba(255,255,255,.97);
+
+z-index:99999;
+
+display:none;
+
+align-items:center;
+
+justify-content:center;
+
+flex-direction:column;
+
+text-align:center;
+}
+
+.loading-screen.show{
+display:flex;
+}
+
+.loading-title{
+
+font-size:21px;
+
+font-weight:bold;
+
+margin-top:18px;
+}
+
+.loading-text{
+
+font-size:13px;
+
+color:#777;
+
+margin-top:7px;
+}
+
+.road{
+
+width:260px;
+
+height:7px;
+
+background:#222;
+
+border-radius:10px;
+
+position:relative;
+
+margin-top:45px;
+}
+
+.road:before{
+
+content:"";
+
+position:absolute;
+
+left:0;
+
+right:0;
+
+top:2px;
+
+border-top:
+3px dashed #f5c400;
+}
+
+.moto{
+
+position:absolute;
+
+left:-50px;
+
+top:-34px;
+
+font-size:40px;
+
+animation:
+motoMove 4.5s linear infinite;
+}
+
+.loading-dot{
+
+display:flex;
+
+gap:6px;
+
+margin-top:20px;
+}
+
+.loading-dot span{
+
+width:7px;
+
+height:7px;
+
+background:#f5c400;
+
+border-radius:50%;
+
+animation:
+blink 1s infinite;
+}
+
+.loading-dot span:nth-child(2){
+animation-delay:.2s;
+}
+
+.loading-dot span:nth-child(3){
+animation-delay:.4s;
+}
+
+@keyframes motoMove{
+
+0%{
+left:-50px;
+transform:scaleX(1);
+}
+
+45%{
+left:120px;
+transform:scaleX(1);
+}
+
+50%{
+left:120px;
+transform:scaleX(-1);
+}
+
+95%{
+left:-50px;
+transform:scaleX(-1);
+}
+
+100%{
+left:-50px;
+transform:scaleX(1);
+}
+}
+
+@keyframes blink{
+
+0%,100%{
+opacity:.25;
+}
+
+50%{
+opacity:1;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================
+     MAPA
+========================= -->
+
+<div class="map-container">
+
+<div id="map"></div>
+
+<div
+id="mapMessage"
+class="map-message">
+Toca el mapa para indicar la recogida
+</div>
+
+</div>
+
+
+<!-- =========================
+     PANEL PRINCIPAL
+========================= -->
+
+<div class="panel">
+
+<div class="title">
+Solicita tu moto transporte
+</div>
+
+<div
+id="subtitle"
+class="subtitle">
+Selecciona el lugar donde te recogeremos.
+</div>
+
+
+<div class="mode">
+
+<button
+id="pickupMode"
+class="active">
+Recogida
+</button>
+
+<button
+id="destinationMode">
+Destino
+</button>
+
+</div>
+
+
+<button
+id="locationButton"
+class="location-button">
+USAR MI UBICACIÓN ACTUAL
+</button>
+
+
+<div class="step">
+
+<div class="step-title">
+PUNTO DE RECOGIDA
+</div>
+
+<div
+id="pickupAddress"
+class="address waiting">
+Toca el mapa para seleccionar
+</div>
+
+</div>
+
+
+<div class="step">
+
+<div class="step-title">
+DESTINO
+</div>
+
+<div
+id="destinationAddress"
+class="address waiting">
+Toca el mapa para seleccionar
+</div>
+
+</div>
+
+
+<!-- DATOS OCULTOS PERO NECESARIOS -->
+
+<div class="info">
+
+<div class="info-box">
+
+<div class="info-label">
+DISTANCIA
+</div>
+
+<div
+id="distance"
+class="info-value">
+—
+</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="info-label">
+TIEMPO APROX.
+</div>
+
+<div
+id="duration"
+class="info-value">
+—
+</div>
+
+</div>
+
+</div>
+
+
+<div class="price">
+
+<div class="price-label">
+VALOR ESTIMADO
+</div>
+
+<div
+id="price"
+class="price-value">
+$0
+</div>
+
+</div>
+
+
+<!-- BOTON NUEVO -->
+
+<button
+id="startButton"
+class="start-button">
+
+INICIAR
+
+</button>
+
+
+<div
+id="status"
+class="status">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     VENTANA VEHICULOS
+========================= -->
+
+<div
+id="vehicleScreen"
+class="vehicle-screen">
+
+<div class="vehicle-panel">
+
+<div class="vehicle-handle"></div>
+
+<div class="vehicle-title">
+Elige tu vehículo
+</div>
+
+
+<div class="vehicle-route-info">
+
+<div class="vehicle-route-box">
+
+<div class="vehicle-route-label">
+DISTANCIA
+</div>
+
+<div
+id="vehicleDistance"
+class="vehicle-route-value">
+—
+</div>
+
+</div>
+
+
+<div class="vehicle-route-box">
+
+<div class="vehicle-route-label">
+TIEMPO APROX.
+</div>
+
+<div
+id="vehicleDuration"
+class="vehicle-route-value">
+—
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MOTO -->
+
+<div
+id="motoOption"
+class="vehicle-option">
+
+<div class="vehicle-image">
+🏍️
+</div>
+
+<div class="vehicle-info">
+
+<div class="vehicle-name">
+Moto
+</div>
+
+<div class="vehicle-details">
+Servicio de moto transporte
+</div>
+
+<div class="vehicle-details">
+Tarifa normal
+</div>
+
+</div>
+
+<div class="vehicle-price">
+
+<span id="motoPrice">
+$0
+</span>
+
+<small>
+Normal
+</small>
+
+</div>
+
+</div>
+
+
+<!-- CARRO -->
+
+<div
+id="carOption"
+class="vehicle-option">
+
+<div class="vehicle-image">
+🚗
+</div>
+
+<div class="vehicle-info">
+
+<div class="vehicle-name">
+Carro
+</div>
+
+<div class="vehicle-details">
+Mayor comodidad
+</div>
+
+<div class="vehicle-details">
+$25 adicionales
+</div>
+
+</div>
+
+<div class="vehicle-price">
+
+<span id="carPrice">
+$0
+</span>
+
+<small>
++ $25
+</small>
+
+</div>
+
+</div>
+
+
+<button
+id="vehicleConfirm"
+class="vehicle-confirm">
+
+CONFIRMAR VIAJE
+
+</button>
+
+
+<button
+id="vehicleClose"
+class="vehicle-close">
+
+VOLVER
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     CARGANDO
+========================= -->
+
+<div
+id="loadingScreen"
+class="loading-screen">
+
+<div class="road">
+
+<div class="moto">
+🏍️
+</div>
+
+</div>
+
+<div class="loading-title">
+Preparando tu viaje
+</div>
+
+<div class="loading-text">
+Enviando solicitud al transporte...
+</div>
+
+<div class="loading-dot">
+
+<span></span>
+<span></span>
+<span></span>
+
+</div>
+
+</div>
+
+
+<!-- LEAFLET JS -->
+
+<script
+src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
+const TARIFA_MINIMA = 35;
+
+const VALOR_POR_KM_ADICIONAL = 5;
+
+const ADICIONAL_CARRO = 25;
+
+const NUMERO_WHATSAPP = "524182371993";
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let pickupLat = null;
+
+let pickupLng = null;
+
+let destinationLat = null;
+
+let destinationLng = null;
+
+let pickupAddress = "";
+
+let destinationAddress = "";
+
+let pickupMarker = null;
+
+let destinationMarker = null;
+
+let routeLayer = null;
+
+let modoSeleccion = "pickup";
+
+let tarifaMoto = 0;
+
+let tarifaCarro = 0;
+
+let vehiculoSeleccionado = "";
+
+
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
+const mapElement =
+document.getElementById("map");
+
+
+/* =====================================================
+   CREAR MAPA
+===================================================== */
+
+let map = null;
+
+
+/* =====================================================
+   INICIAR MAPA
+===================================================== */
+
+function iniciarMapa(lat,lng){
+
+if(map){
+
+map.setView(
+[lat,lng],
+16
+);
+
+setTimeout(function(){
+
+map.invalidateSize(true);
+
+},300);
+
+return;
+
+}
+
+
+map = L.map(
+"map",
+{
+zoomControl:false,
+attributionControl:true
+}
+);
+
+
+/* CAPA OPENSTREETMAP */
+
+L.tileLayer(
+
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+{
+maxZoom:19,
+
+attribution:
+"© OpenStreetMap contributors"
+}
+
+).addTo(map);
+
+
+/* POSICIÓN */
+
+map.setView(
+[lat,lng],
+16
+);
+
+
+/* FORZAR TAMAÑO */
+
+setTimeout(function(){
+
+map.invalidateSize(true);
+
+},300);
+
+setTimeout(function(){
+
+map.invalidateSize(true);
+
+},1000);
+
+
+/* CLICK MAPA */
+
+map.on(
+"click",
+manejarClickMapa
+);
+
+}
+
+
+/* =====================================================
+   FALLBACK
+===================================================== */
+
+function iniciarMapaPredeterminado(){
+
+iniciarMapa(
+21.1561,
+-100.9333
+);
+
+}
+
+
+/* =====================================================
+   GPS INICIAL
+===================================================== */
+
+function obtenerUbicacionInicial(){
+
+if(
+!navigator.geolocation
+){
+
+iniciarMapaPredeterminado();
+
+return;
+
+}
+
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+iniciarMapa(
+
+position.coords.latitude,
+
+position.coords.longitude
+
+);
+
+},
+
+function(){
+
+iniciarMapaPredeterminado();
+
+},
+
+{
+
+enableHighAccuracy:true,
+
+timeout:10000,
+
+maximumAge:30000
+
+}
+
+);
+
+}
+
+
+/* =====================================================
+   CLICK MAPA
+===================================================== */
+
+function manejarClickMapa(e){
+
+const lat =
+e.latlng.lat;
+
+const lng =
+e.latlng.lng;
+
+
+if(
+modoSeleccion === "pickup"
+){
+
+pickupLat = lat;
+
+pickupLng = lng;
+
+
+if(pickupMarker){
+
+map.removeLayer(
+pickupMarker
+);
+
+}
+
+
+pickupMarker =
+L.marker(
+
+[lat,lng],
+
+{
+icon:
+crearIconoRecogida()
+}
+
+).addTo(map);
+
+
+obtenerDireccionRecogida(
+lat,
+lng
+);
+
+
+/* PASAR A DESTINO */
+
+setTimeout(function(){
+
+modoSeleccion =
+"destination";
+
+
+document
+.getElementById("pickupMode")
+.classList.remove("active");
+
+
+document
+.getElementById("destinationMode")
+.classList.add("active");
+
+
+document
+.getElementById("mapMessage")
+.innerText =
+"Ahora toca el mapa para indicar el destino";
+
+
+document
+.getElementById("subtitle")
+.innerText =
+"Selecciona el lugar donde quieres llegar.";
+
+},800);
+
+
+}else{
+
+
+destinationLat = lat;
+
+destinationLng = lng;
+
+
+if(destinationMarker){
+
+map.removeLayer(
+destinationMarker
+);
+
+}
+
+
+destinationMarker =
+L.marker(
+
+[lat,lng],
+
+{
+icon:
+crearIconoDestino()
+}
+
+).addTo(map);
+
+
+obtenerDireccionDestino(
+lat,
+lng
+);
+
+
+if(
+pickupLat !== null &&
+pickupLng !== null
+){
+
+calcularRuta();
+
+}
+
+}
+
+}
+
+
+/* =====================================================
+   BOTONES RECOGIDA / DESTINO
+===================================================== */
+
+document
+.getElementById("pickupMode")
+.addEventListener(
+"click",
+function(){
+
+modoSeleccion =
+"pickup";
+
+
+this.classList.add(
+"active"
+);
+
+
+document
+.getElementById("destinationMode")
+.classList.remove(
+"active"
+);
+
+
+document
+.getElementById("mapMessage")
+.innerText =
+"Toca el mapa para indicar la recogida";
+
+
+document
+.getElementById("subtitle")
+.innerText =
+"Selecciona el lugar donde te recogeremos.";
+
+}
+);
+
+
+document
+.getElementById("destinationMode")
+.addEventListener(
+"click",
+function(){
+
+modoSeleccion =
+"destination";
+
+
+this.classList.add(
+"active"
+);
+
+
+document
+.getElementById("pickupMode")
+.classList.remove(
+"active"
+);
+
+
+document
+.getElementById("mapMessage")
+.innerText =
+"Toca el mapa para indicar el destino";
+
+
+document
+.getElementById("subtitle")
+.innerText =
+"Selecciona a dónde quieres llegar.";
+
+}
+);
+
+
+/* =====================================================
+   GPS DEL BOTÓN
+===================================================== */
+
+document
+.getElementById("locationButton")
+.addEventListener(
+"click",
+function(){
+
+const boton =
+this;
+
+
+if(
+!navigator.geolocation
+){
+
+alert(
+"Este teléfono no permite obtener la ubicación GPS."
+);
+
+return;
+
+}
+
+
+boton.innerText =
+"OBTENIENDO UBICACIÓN...";
+
+
+document
+.getElementById("status")
+.innerText =
+"Solicitando ubicación GPS...";
+
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+const lat =
+position.coords.latitude;
+
+const lng =
+position.coords.longitude;
+
+
+pickupLat =
+lat;
+
+pickupLng =
+lng;
+
+
+if(pickupMarker){
+
+map.removeLayer(
+pickupMarker
+);
+
+}
+
+
+pickupMarker =
+L.marker(
+
+[lat,lng],
+
+{
+icon:
+crearIconoRecogida()
+}
+
+).addTo(map);
+
+
+map.setView(
+[lat,lng],
+17
+);
+
+
+setTimeout(function(){
+
+map.invalidateSize(true);
+
+},300);
+
+
+modoSeleccion =
+"destination";
+
+
+document
+.getElementById("pickupMode")
+.classList.remove(
+"active"
+);
+
+
+document
+.getElementById("destinationMode")
+.classList.add(
+"active"
+);
+
+
+document
+.getElementById("mapMessage")
+.innerText =
+"Ahora toca el mapa para indicar el destino";
+
+
+document
+.getElementById("subtitle")
+.innerText =
+"Selecciona el lugar donde quieres llegar.";
+
+
+boton.innerText =
+"UBICACIÓN DE RECOGIDA SELECCIONADA";
+
+
+obtenerDireccionRecogida(
+lat,
+lng
+);
+
+
+document
+.getElementById("status")
+.innerText =
+"Ubicación de recogida establecida.";
+
+},
+
+function(){
+
+boton.innerText =
+"USAR MI UBICACIÓN ACTUAL";
+
+
+document
+.getElementById("status")
+.innerText =
+"No se pudo obtener tu ubicación.";
+
+
+alert(
+"Debes permitir el acceso a la ubicación GPS para usar esta función."
+);
+
+},
+
+{
+
+enableHighAccuracy:true,
+
+timeout:15000,
+
+maximumAge:0
+
+}
+
+);
+
+}
+);
+
+
+/* =====================================================
+   ICONO RECOGIDA
+===================================================== */
+
+function crearIconoRecogida(){
+
+return L.divIcon({
+
+className:"",
+
+html:
+'<div class="pickup-icon">'+
+'<div class="marker-dot"></div>'+
+'</div>',
+
+iconSize:
+[38,38],
+
+iconAnchor:
+[19,38]
+
+});
+
+}
+
+
+/* =====================================================
+   ICONO DESTINO
+===================================================== */
+
+function crearIconoDestino(){
+
+return L.divIcon({
+
+className:"",
+
+html:
+'<div class="destination-icon">'+
+'<div class="marker-dot"></div>'+
+'</div>',
+
+iconSize:
+[38,38],
+
+iconAnchor:
+[19,38]
+
+});
+
+}
+
+
+/* =====================================================
+   DIRECCIÓN RECOGIDA
+===================================================== */
+
+async function obtenerDireccionRecogida(
+lat,
+lng
+){
+
+document
+.getElementById("pickupAddress")
+.innerText =
+"Buscando dirección...";
+
+
+try{
+
+const response =
+await fetch(
+
+"https://nominatim.openstreetmap.org/reverse"+
+"?format=json"+
+"&lat="+lat+
+"&lon="+lng+
+"&zoom=18"+
+"&addressdetails=1"+
+"&accept-language=es"
+
+);
+
+
+if(
+!response.ok
+){
+
+throw new Error(
+"Error Nominatim"
+);
+
+}
+
+
+const data =
+await response.json();
+
+
+pickupAddress =
+data.display_name ||
+"Dirección no encontrada";
+
+
+document
+.getElementById("pickupAddress")
+.innerText =
+pickupAddress;
+
+
+actualizarGlide();
+
+
+}catch(error){
+
+document
+.getElementById("pickupAddress")
+.innerText =
+"No se pudo obtener la dirección.";
+
+}
+
+}
+
+
+/* =====================================================
+   DIRECCIÓN DESTINO
+===================================================== */
+
+async function obtenerDireccionDestino(
+lat,
+lng
+){
+
+document
+.getElementById("destinationAddress")
+.innerText =
+"Buscando dirección...";
+
+
+try{
+
+const response =
+await fetch(
+
+"https://nominatim.openstreetmap.org/reverse"+
+"?format=json"+
+"&lat="+lat
