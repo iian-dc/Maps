@@ -332,7 +332,7 @@ font-size:14px
 
 
 /* ================================= */
-/* NUEVA VENTANA DE CONFIRMACIÓN     */
+/* VENTANA DE CONFIRMACIÓN           */
 /* ================================= */
 
 .confirm-screen{
@@ -414,7 +414,7 @@ height:100%
 }
 
 
-/* MARCADOR CENTRAL DE RECOGIDA */
+/* MARCADOR CENTRAL */
 
 .confirm-center-marker{
 position:absolute;
@@ -446,7 +446,7 @@ border-radius:50%
 }
 
 
-/* INDICACIÓN SOBRE EL MAPA */
+/* INDICACIÓN */
 
 .confirm-map-message{
 position:absolute;
@@ -465,7 +465,7 @@ box-shadow:0 3px 12px rgba(0,0,0,.3)
 }
 
 
-/* INFORMACIÓN INFERIOR */
+/* INFORMACIÓN */
 
 .confirm-info{
 background:#111;
@@ -550,334 +550,9 @@ cursor:pointer
 transform:scale(.99)
 }
 
-</style>
-
-</head>
-
-<body>
-
-<div class="app">
-
-<div class="map-container">
-
-<div id="map"></div>
-
-</div>
-
-<div class="panel">
-
-<div class="title">
-Solicita tu transporte
-</div>
-
-<div class="subtitle" id="subtitle">
-Selecciona el lugar donde te recogeremos.
-</div>
-
-<div class="mode">
-
-<button id="pickupMode" class="active">
-Recogida
-</button>
-
-<button id="destinationMode">
-Destino
-</button>
-
-</div>
-
-<button id="locationButton" class="location-button">
-USAR MI UBICACIÓN ACTUAL
-</button>
-
-<div class="step">
-
-<div class="step-title">
-PUNTO DE RECOGIDA
-</div>
-
-<div id="pickupAddress" class="address waiting">
-Toca el mapa para seleccionar
-</div>
-
-</div>
-
-<div class="step">
-
-<div class="step-title">
-DESTINO
-</div>
-
-<div id="destinationAddress" class="address waiting">
-Toca el mapa para seleccionar
-</div>
-
-</div>
-
-<button id="startButton" class="start-button" disabled>
-INICIAR
-</button>
-
-<div id="status" class="status"></div>
-
-</div>
-
-</div>
-
-
-<!-- ================================= -->
-<!-- VENTANA DE SELECCIÓN DE VEHÍCULO  -->
-<!-- ================================= -->
-
-<div id="vehicleScreen" class="vehicle-screen">
-
-<div class="vehicle-panel">
-
-<div class="handle"></div>
-
-<div class="vehicle-title">
-Elige tu vehículo
-</div>
-
-<div class="vehicle-subtitle">
-Selecciona cómo deseas realizar tu viaje
-</div>
-
-<div id="motoOption" class="vehicle-option">
-
-<div class="vehicle-icon">
-🏍️
-</div>
-
-<div class="vehicle-info">
-
-<div class="vehicle-name">
-Moto
-</div>
-
-<div class="vehicle-text">
-Transporte en motocicleta
-</div>
-
-<div id="motoDistance" class="vehicle-distance">
-Distancia: calculando...
-</div>
-
-<div id="motoPrice" class="vehicle-price">
-$0.00
-</div>
-
-<button id="motoStart" class="vehicle-start">
-INICIAR VIAJE
-</button>
-
-</div>
-
-<div id="motoCheck" class="vehicle-check"></div>
-
-</div>
-
-
-<div id="carOption" class="vehicle-option">
-
-<div class="vehicle-icon">
-🚗
-</div>
-
-<div class="vehicle-info">
-
-<div class="vehicle-name">
-Carro
-</div>
-
-<div class="vehicle-text">
-Transporte en automóvil
-</div>
-
-<div id="carDistance" class="vehicle-distance">
-Distancia: calculando...
-</div>
-
-<div id="carPrice" class="vehicle-price">
-$0.00
-</div>
-
-<button id="carStart" class="vehicle-start">
-INICIAR VIAJE
-</button>
-
-</div>
-
-<div id="carCheck" class="vehicle-check"></div>
-
-</div>
-
-<button id="closeVehicle" class="close-button">
-Volver
-</button>
-
-</div>
-
-</div>
-
-
-<!-- ================================= -->
-<!-- VENTANA MAPA DE CONFIRMACIÓN      -->
-<!-- ================================= -->
-
-<div id="confirmScreen" class="confirm-screen">
-
-<div class="confirm-panel">
-
-<div class="confirm-header">
-
-<button id="confirmBack" class="confirm-back-button">
-‹
-</button>
-
-<div class="confirm-title">
-Confirma el punto de partida
-</div>
-
-</div>
-
-
-<div class="confirm-map-container">
-
-<div id="confirmMap"></div>
-
-<div class="confirm-map-message">
-Mueve el mapa y coloca el punto exactamente donde quieres que te recojamos
-</div>
-
-<div class="confirm-center-marker">
-
-<div class="confirm-pin">
-
-<div class="confirm-pin-dot"></div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="confirm-info">
-
-<div class="confirm-section">
-
-<div class="confirm-label">
-PUNTO DE RECOGIDA
-</div>
-
-<div id="confirmPickupAddress"
-class="confirm-address">
-
-Selecciona el punto de recogida en el mapa
-
-</div>
-
-</div>
-
-
-<div class="confirm-route-info">
-
-<div class="confirm-route-box">
-
-<div class="confirm-route-label">
-DISTANCIA
-</div>
-
-<div id="confirmDistance"
-class="confirm-route-value">
-
-0.0 km
-
-</div>
-
-</div>
-
-
-<div class="confirm-route-box">
-
-<div class="confirm-route-label">
-PRECIO
-</div>
-
-<div id="confirmPrice"
-class="confirm-route-value confirm-price">
-
-$0.00
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="confirm-footer">
-
-<button id="confirmTripButton" class="confirm-button">
-
-CONFIRMAR EL INICIO DE VIAJE
-
-</button>
-
-</div>
-
-</div>
-
-  </div>
-  <!-- ================================= -->
-<!-- VENTANA PREPARANDO EL VIAJE       -->
-<!-- ================================= -->
-
-<div id="preparingScreen" class="preparing-screen">
-
-<div class="preparing-panel">
-
-<div id="preparingVehicle" class="preparing-vehicle">
-🏍️
-</div>
-
-<div class="preparing-title">
-Preparando tu viaje
-</div>
-
-<div class="preparing-subtitle">
-Enviando solicitud de transporte...
-</div>
-
-<div class="loading-container">
-
-<div class="loading-bar">
-
-<div id="loadingProgress"
-class="loading-progress">
-</div>
-
-</div>
-
-<div id="loadingPercent"
-class="loading-percent">
-0%
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<style>
 
 /* ================================= */
-/* VENTANA PREPARANDO EL VIAJE       */
+/* PREPARANDO EL VIAJE               */
 /* ================================= */
 
 .preparing-screen{
@@ -972,10 +647,365 @@ transform:translateX(-8px) scale(1)
 
 </style>
 
+</head>
+
+<body>
+
+
+<div class="app">
+
+
+<div class="map-container">
+
+<div id="map"></div>
+
+</div>
+
+
+<div class="panel">
+
+
+<div class="title">
+Solicita tu transporte
+</div>
+
+
+<div class="subtitle" id="subtitle">
+Selecciona el lugar donde te recogeremos.
+</div>
+
+
+<div class="mode">
+
+<button id="pickupMode" class="active">
+Recogida
+</button>
+
+<button id="destinationMode">
+Destino
+</button>
+
+</div>
+
+
+<button id="locationButton" class="location-button">
+USAR MI UBICACIÓN ACTUAL
+</button>
+
+
+<div class="step">
+
+<div class="step-title">
+PUNTO DE RECOGIDA
+</div>
+
+<div id="pickupAddress" class="address waiting">
+Toca el mapa para seleccionar
+</div>
+
+</div>
+
+
+<div class="step">
+
+<div class="step-title">
+DESTINO
+</div>
+
+<div id="destinationAddress" class="address waiting">
+Toca el mapa para seleccionar
+</div>
+
+</div>
+
+
+<button id="startButton" class="start-button" disabled>
+INICIAR
+</button>
+
+
+<div id="status" class="status"></div>
+
+
+</div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- VENTANA DE SELECCIÓN DE VEHÍCULO  -->
+<!-- ================================= -->
+
+<div id="vehicleScreen" class="vehicle-screen">
+
+<div class="vehicle-panel">
+
+<div class="handle"></div>
+
+
+<div class="vehicle-title">
+Elige tu vehículo
+</div>
+
+
+<div class="vehicle-subtitle">
+Selecciona cómo deseas realizar tu viaje
+</div>
+
+
+<div id="motoOption" class="vehicle-option">
+
+<div class="vehicle-icon">
+🏍️
+</div>
+
+
+<div class="vehicle-info">
+
+<div class="vehicle-name">
+Moto
+</div>
+
+<div class="vehicle-text">
+Transporte en motocicleta
+</div>
+
+<div id="motoDistance" class="vehicle-distance">
+Distancia: calculando...
+</div>
+
+<div id="motoPrice" class="vehicle-price">
+$0.00
+</div>
+
+<button id="motoStart" class="vehicle-start">
+INICIAR VIAJE
+</button>
+
+</div>
+
+
+<div id="motoCheck" class="vehicle-check"></div>
+
+</div>
+
+
+<div id="carOption" class="vehicle-option">
+
+<div class="vehicle-icon">
+🚗
+</div>
+
+
+<div class="vehicle-info">
+
+<div class="vehicle-name">
+Carro
+</div>
+
+<div class="vehicle-text">
+Transporte en automóvil
+</div>
+
+<div id="carDistance" class="vehicle-distance">
+Distancia: calculando...
+</div>
+
+<div id="carPrice" class="vehicle-price">
+$0.00
+</div>
+
+<button id="carStart" class="vehicle-start">
+INICIAR VIAJE
+</button>
+
+</div>
+
+
+<div id="carCheck" class="vehicle-check"></div>
+
+</div>
+
+
+<button id="closeVehicle" class="close-button">
+Volver
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- VENTANA MAPA DE CONFIRMACIÓN      -->
+<!-- ================================= -->
+
+<div id="confirmScreen" class="confirm-screen">
+
+
+<div class="confirm-panel">
+
+
+<div class="confirm-header">
+
+<button id="confirmBack" class="confirm-back-button">
+‹
+</button>
+
+<div class="confirm-title">
+Confirma el punto de partida
+</div>
+
+</div>
+
+
+<div class="confirm-map-container">
+
+<div id="confirmMap"></div>
+
+
+<div class="confirm-map-message">
+Mueve el mapa y coloca el punto exactamente donde quieres que te recojamos
+</div>
+
+
+<div class="confirm-center-marker">
+
+<div class="confirm-pin">
+
+<div class="confirm-pin-dot"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="confirm-info">
+
+
+<div class="confirm-section">
+
+<div class="confirm-label">
+PUNTO DE RECOGIDA
+</div>
+
+<div id="confirmPickupAddress"
+class="confirm-address">
+
+Selecciona el punto de recogida en el mapa
+
+</div>
+
+</div>
+
+
+<div class="confirm-route-info">
+
+
+<div class="confirm-route-box">
+
+<div class="confirm-route-label">
+DISTANCIA
+</div>
+
+<div id="confirmDistance"
+class="confirm-route-value">
+
+0.0 km
+
+</div>
+
+</div>
+
+
+<div class="confirm-route-box">
+
+<div class="confirm-route-label">
+PRECIO
+</div>
+
+<div id="confirmPrice"
+class="confirm-route-value confirm-price">
+
+$0.00
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<div class="confirm-footer">
+
+<button id="confirmTripButton" class="confirm-button">
+
+CONFIRMAR EL INICIO DE VIAJE
+
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- VENTANA PREPARANDO EL VIAJE       -->
+<!-- ================================= -->
+
+<div id="preparingScreen"
+class="preparing-screen">
+
+<div class="preparing-panel">
+
+<div id="preparingVehicle"
+class="preparing-vehicle">
+🏍️
+</div>
+
+<div class="preparing-title">
+Preparando tu viaje
+</div>
+
+<div class="preparing-subtitle">
+Enviando solicitud de transporte...
+</div>
+
+<div class="loading-container">
+
+<div class="loading-bar">
+
+<div id="loadingProgress"
+class="loading-progress">
+</div>
+
+</div>
+
+<div id="loadingPercent"
+class="loading-percent">
+0%
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+
 
 /* ================================= */
 /* PRECIOS                           */
@@ -1343,6 +1373,8 @@ coord[0]
 );
 
 
+/* RUTA AZUL CIELO */
+
 routeLine=
 L.polyline(
 coordinates,
@@ -1560,9 +1592,7 @@ await calcularRuta();
 
 }
 );
-
-
-/* ================================= */
+  /* ================================= */
 /* USAR UBICACIÓN ACTUAL             */
 /* ================================= */
 
@@ -1697,7 +1727,7 @@ maximumAge:0
 
 
 /* ================================= */
-/* ABRIR VEHÍCULOS                  */
+/* ABRIR VEHÍCULOS                   */
 /* ================================= */
 
 startButton.onclick=function(){
@@ -1725,7 +1755,7 @@ document.getElementById(
 
 
 /* ================================= */
-/* SELECCIONAR MOTO                 */
+/* SELECCIONAR MOTO                  */
 /* ================================= */
 
 document.getElementById(
@@ -1771,7 +1801,7 @@ document.getElementById(
 
 
 /* ================================= */
-/* SELECCIONAR CARRO                */
+/* SELECCIONAR CARRO                 */
 /* ================================= */
 
 document.getElementById(
@@ -1817,7 +1847,7 @@ document.getElementById(
 
 
 /* ================================= */
-/* ABRIR MAPA DE CONFIRMACIÓN       */
+/* ABRIR MAPA DE CONFIRMACIÓN        */
 /* ================================= */
 
 function abrirConfirmacion(){
@@ -1835,6 +1865,8 @@ document.getElementById(
 "show"
 );
 
+
+/* Crear mapa una sola vez */
 
 if(!confirmMap){
 
@@ -1858,6 +1890,11 @@ confirmMap
 );
 
 
+/*
+Detectar cuando el cliente
+mueve el mapa.
+*/
+
 confirmMap.on(
 "moveend",
 async function(){
@@ -1869,6 +1906,10 @@ return;
 }
 
 
+/*
+Obtener el centro del mapa.
+*/
+
 const centro=
 confirmMap.getCenter();
 
@@ -1879,6 +1920,10 @@ centro.lat;
 pickupLng=
 centro.lng;
 
+
+/*
+Actualizar marcador principal.
+*/
 
 if(pickupMarker){
 
@@ -1905,12 +1950,22 @@ icon:pickupIcon()
 }
 
 
+/*
+Actualizar dirección,
+distancia y precio.
+*/
+
 await actualizarConfirmacion();
 
 });
 
 }
 
+
+/*
+Centrar el mapa en el
+punto actual de recogida.
+*/
 
 actualizandoConfirmacion=true;
 
@@ -1924,6 +1979,10 @@ pickupLng
 );
 
 
+/*
+Actualizar tamaño del mapa.
+*/
+
 setTimeout(
 function(){
 
@@ -1936,13 +1995,17 @@ actualizandoConfirmacion=false;
 );
 
 
+/*
+Actualizar información.
+*/
+
 actualizarConfirmacion();
 
 }
 
 
 /* ================================= */
-/* ACTUALIZAR CONFIRMACIÓN           */
+/* ACTUALIZAR CONFIRMACIÓN            */
 /* ================================= */
 
 async function actualizarConfirmacion(){
@@ -1963,6 +2026,10 @@ document.getElementById(
 "Actualizando dirección...";
 
 
+/*
+Obtener nueva dirección.
+*/
+
 const direccion=
 await obtenerDireccion(
 pickupLat,
@@ -1970,15 +2037,28 @@ pickupLng
 );
 
 
+/*
+Mostrar dirección.
+*/
+
 document.getElementById(
 "confirmPickupAddress"
 ).innerText=
 direccion;
 
 
+/*
+Actualizar también
+la dirección principal.
+*/
+
 pickupAddress.innerText=
 direccion;
 
+
+/*
+Recalcular ruta.
+*/
 
 await calcularRutaConfirmacion();
 
@@ -2063,9 +2143,17 @@ const route=
 data.routes[0];
 
 
+/*
+Actualizar kilómetros.
+*/
+
 routeDistanceKm=
 route.distance/1000;
 
+
+/*
+Eliminar ruta anterior.
+*/
 
 if(confirmRouteLine){
 
@@ -2075,6 +2163,10 @@ confirmRouteLine
 
 }
 
+
+/*
+Convertir coordenadas.
+*/
 
 const coordinates=
 route.geometry.coordinates.map(
@@ -2089,6 +2181,10 @@ coord[0]
 );
 
 
+/*
+Dibujar nueva ruta.
+*/
+
 confirmRouteLine=
 L.polyline(
 coordinates,
@@ -2102,12 +2198,20 @@ confirmMap
 );
 
 
+/*
+Mostrar distancia.
+*/
+
 document.getElementById(
 "confirmDistance"
 ).innerText=
 routeDistanceKm.toFixed(1)+
 " km";
 
+
+/*
+Calcular precio.
+*/
 
 let precio=0;
 
@@ -2130,6 +2234,10 @@ routeDistanceKm
 
 }
 
+
+/*
+Mostrar precio.
+*/
 
 document.getElementById(
 "confirmPrice"
@@ -2198,12 +2306,241 @@ abrirConfirmacion();
 
 
 /* ================================= */
+/* GENERAR ENLACE GOOGLE MAPS        */
+/* ================================= */
+
+function generarRutaGoogleMaps(){
+
+if(
+pickupLat===null ||
+pickupLng===null ||
+destinationLat===null ||
+destinationLng===null
+){
+
+return "";
+
+}
+
+
+/*
+Ruta:
+
+Punto de recogida
+        ↓
+Destino
+
+Google Maps recibe las coordenadas
+exactas de ambos puntos.
+*/
+
+const url=
+"https://www.google.com/maps/dir/?api=1"+
+"&origin="+
+encodeURIComponent(
+pickupLat+
+","+
+pickupLng
+)+
+"&destination="+
+encodeURIComponent(
+destinationLat+
+","+
+destinationLng
+)+
+"&travelmode=driving";
+
+
+return url;
+
+}
+
+
+/* ================================= */
+/* GENERAR MENSAJE WHATSAPP         */
+/* ================================= */
+
+function generarMensajeWhatsApp(){
+
+/*
+Calcular precio final.
+*/
+
+let precio=0;
+
+
+if(
+selectedVehicle==="Moto"
+){
+
+precio=
+calcularPrecioMoto(
+routeDistanceKm
+);
+
+}else{
+
+precio=
+calcularPrecioCarro(
+routeDistanceKm
+);
+
+}
+
+
+/*
+Crear ruta de Google Maps.
+*/
+
+const rutaGoogle=
+generarRutaGoogleMaps();
+
+
+/*
+Obtener direcciones.
+*/
+
+const recogida=
+pickupAddress.innerText ||
+"Dirección no disponible";
+
+
+const destino=
+destinationAddress.innerText ||
+"Dirección no disponible";
+
+
+/*
+Mensaje tipo factura.
+*/
+
+let mensaje="";
+
+
+mensaje+=
+"━━━━━━━━━━━━━━━━━━━━\n";
+
+mensaje+=
+"🚕 SOLICITUD DE TRANSPORTE\n";
+
+mensaje+=
+"━━━━━━━━━━━━━━━━━━━━\n\n";
+
+
+mensaje+=
+"📋 DETALLES DEL VIAJE\n\n";
+
+
+mensaje+=
+"🚘 Servicio: "+
+selectedVehicle+
+"\n";
+
+
+mensaje+=
+"📏 Distancia: "+
+routeDistanceKm.toFixed(1)+
+" km\n";
+
+
+mensaje+=
+"💰 Precio: $"+
+precio.toFixed(2)+
+"\n\n";
+
+
+mensaje+=
+"📍 PUNTO DE RECOGIDA\n";
+
+mensaje+=
+recogida+
+"\n\n";
+
+
+mensaje+=
+"🏁 DESTINO\n";
+
+mensaje+=
+destino+
+"\n\n";
+
+
+mensaje+=
+"━━━━━━━━━━━━━━━━━━━━\n";
+
+mensaje+=
+"🗺️ RUTA PARA EL CONDUCTOR\n";
+
+mensaje+=
+"━━━━━━━━━━━━━━━━━━━━\n\n";
+
+
+mensaje+=
+rutaGoogle+
+"\n\n";
+
+
+mensaje+=
+"Por favor, dirigirse al punto de recogida indicado y continuar hacia el destino.\n";
+
+
+mensaje+=
+"━━━━━━━━━━━━━━━━━━━━";
+
+
+return mensaje;
+
+}
+
+
+/* ================================= */
+/* ABRIR WHATSAPP                   */
+/* ================================= */
+
+function enviarSolicitudWhatsApp(){
+
+const mensaje=
+generarMensajeWhatsApp();
+
+
+const numero=
+"524182371993";
+
+
+const whatsappURL=
+"https://wa.me/"+
+numero+
+"?text="+
+encodeURIComponent(
+mensaje
+);
+
+
+/*
+Abrir WhatsApp.
+
+En celular abrirá WhatsApp
+o WhatsApp Web dependiendo
+del dispositivo.
+*/
+
+window.location.href=
+whatsappURL;
+
+}
+
+
+/* ================================= */
 /* CONFIRMAR INICIO DE VIAJE         */
 /* ================================= */
 
 document.getElementById(
 "confirmTripButton"
 ).onclick=function(){
+
+/*
+Calcular precio final.
+*/
 
 const precio=
 selectedVehicle==="Moto"
@@ -2218,7 +2555,7 @@ routeDistanceKm
 
 
 /*
-Cerrar mapa de confirmación.
+Cerrar confirmación.
 */
 
 document.getElementById(
@@ -2252,7 +2589,7 @@ preparingVehicle.innerText="🚗";
 
 
 /*
-Mostrar pantalla de preparación.
+Mostrar pantalla.
 */
 
 const preparingScreen=
@@ -2267,7 +2604,7 @@ preparingScreen.classList.add(
 
 
 /*
-Reiniciar carga.
+Reiniciar barra.
 */
 
 const loadingProgress=
@@ -2282,9 +2619,12 @@ document.getElementById(
 );
 
 
-loadingProgress.style.width="0%";
+loadingProgress.style.width=
+"0%";
 
-loadingPercent.innerText="0%";
+
+loadingPercent.innerText=
+"0%";
 
 
 /*
@@ -2304,14 +2644,15 @@ document.querySelector(
 
 
 /*
-Temporizador de 5 segundos.
+Iniciar contador de 5 segundos.
 */
 
 const inicio=
 Date.now();
 
 
-const duracion=5000;
+const duracion=
+5000;
 
 
 const intervalo=
@@ -2319,11 +2660,13 @@ setInterval(
 function(){
 
 const transcurrido=
-Date.now()-inicio;
+Date.now()-
+inicio;
 
 
 let porcentaje=
-(transcurrido/duracion)*100;
+(transcurrido/duracion)*
+100;
 
 
 if(
@@ -2335,15 +2678,25 @@ porcentaje=100;
 }
 
 
+/*
+Actualizar barra.
+*/
+
 loadingProgress.style.width=
 porcentaje+
 "%";
 
 
 loadingPercent.innerText=
-Math.floor(porcentaje)+
+Math.floor(
+porcentaje
+)+
 "%";
 
+
+/*
+Cuando llega al 100%.
+*/
 
 if(
 transcurrido>=duracion
@@ -2354,6 +2707,10 @@ intervalo
 );
 
 
+/*
+Mostrar solicitud enviada.
+*/
+
 document.querySelector(
 ".preparing-title"
 ).innerText=
@@ -2363,7 +2720,27 @@ document.querySelector(
 document.querySelector(
 ".preparing-subtitle"
 ).innerText=
-"Estamos buscando tu transporte...";
+"Estamos enviando los datos del viaje...";
+
+
+/*
+Esperar un pequeño momento
+para que el cliente vea
+"Solicitud enviada".
+*/
+
+setTimeout(
+function(){
+
+/*
+Enviar solicitud a WhatsApp.
+*/
+
+enviarSolicitudWhatsApp();
+
+},
+700
+);
 
 }
 
@@ -2375,7 +2752,7 @@ document.querySelector(
 
 
 /* ================================= */
-/* VOLVER DE CONFIRMACIÓN            */
+/* VOLVER DE CONFIRMACIÓN             */
 /* ================================= */
 
 document.getElementById(
@@ -2464,4 +2841,4 @@ timeout:10000
 
 </body>
 
-  </html>
+</html>
