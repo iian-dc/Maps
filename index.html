@@ -556,9 +556,7 @@ transform:scale(.99)
 
 <body>
 
-
 <div class="app">
-
 
 <div class="map-container">
 
@@ -566,19 +564,15 @@ transform:scale(.99)
 
 </div>
 
-
 <div class="panel">
-
 
 <div class="title">
 Solicita tu transporte
 </div>
 
-
 <div class="subtitle" id="subtitle">
 Selecciona el lugar donde te recogeremos.
 </div>
-
 
 <div class="mode">
 
@@ -592,11 +586,9 @@ Destino
 
 </div>
 
-
 <button id="locationButton" class="location-button">
 USAR MI UBICACIÓN ACTUAL
 </button>
-
 
 <div class="step">
 
@@ -610,7 +602,6 @@ Toca el mapa para seleccionar
 
 </div>
 
-
 <div class="step">
 
 <div class="step-title">
@@ -623,14 +614,11 @@ Toca el mapa para seleccionar
 
 </div>
 
-
 <button id="startButton" class="start-button" disabled>
 INICIAR
 </button>
 
-
 <div id="status" class="status"></div>
-
 
 </div>
 
@@ -647,23 +635,19 @@ INICIAR
 
 <div class="handle"></div>
 
-
 <div class="vehicle-title">
 Elige tu vehículo
 </div>
 
-
 <div class="vehicle-subtitle">
 Selecciona cómo deseas realizar tu viaje
 </div>
-
 
 <div id="motoOption" class="vehicle-option">
 
 <div class="vehicle-icon">
 🏍️
 </div>
-
 
 <div class="vehicle-info">
 
@@ -689,7 +673,6 @@ INICIAR VIAJE
 
 </div>
 
-
 <div id="motoCheck" class="vehicle-check"></div>
 
 </div>
@@ -700,7 +683,6 @@ INICIAR VIAJE
 <div class="vehicle-icon">
 🚗
 </div>
-
 
 <div class="vehicle-info">
 
@@ -726,11 +708,9 @@ INICIAR VIAJE
 
 </div>
 
-
 <div id="carCheck" class="vehicle-check"></div>
 
 </div>
-
 
 <button id="closeVehicle" class="close-button">
 Volver
@@ -747,9 +727,7 @@ Volver
 
 <div id="confirmScreen" class="confirm-screen">
 
-
 <div class="confirm-panel">
-
 
 <div class="confirm-header">
 
@@ -768,11 +746,9 @@ Confirma el punto de partida
 
 <div id="confirmMap"></div>
 
-
 <div class="confirm-map-message">
 Mueve el mapa y coloca el punto exactamente donde quieres que te recojamos
 </div>
-
 
 <div class="confirm-center-marker">
 
@@ -788,7 +764,6 @@ Mueve el mapa y coloca el punto exactamente donde quieres que te recojamos
 
 
 <div class="confirm-info">
-
 
 <div class="confirm-section">
 
@@ -807,7 +782,6 @@ Selecciona el punto de recogida en el mapa
 
 
 <div class="confirm-route-info">
-
 
 <div class="confirm-route-box">
 
@@ -829,7 +803,6 @@ class="confirm-route-value">
 
 <div class="confirm-route-label">
 PRECIO
-
 </div>
 
 <div id="confirmPrice"
@@ -841,9 +814,7 @@ $0.00
 
 </div>
 
-
 </div>
-
 
 </div>
 
@@ -858,16 +829,153 @@ CONFIRMAR EL INICIO DE VIAJE
 
 </div>
 
+</div>
+
+  </div>
+  <!-- ================================= -->
+<!-- VENTANA PREPARANDO EL VIAJE       -->
+<!-- ================================= -->
+
+<div id="preparingScreen" class="preparing-screen">
+
+<div class="preparing-panel">
+
+<div id="preparingVehicle" class="preparing-vehicle">
+🏍️
+</div>
+
+<div class="preparing-title">
+Preparando tu viaje
+</div>
+
+<div class="preparing-subtitle">
+Enviando solicitud de transporte...
+</div>
+
+<div class="loading-container">
+
+<div class="loading-bar">
+
+<div id="loadingProgress"
+class="loading-progress">
+</div>
+
+</div>
+
+<div id="loadingPercent"
+class="loading-percent">
+0%
+</div>
+
+</div>
 
 </div>
 
 </div>
+
+
+<style>
+
+/* ================================= */
+/* VENTANA PREPARANDO EL VIAJE       */
+/* ================================= */
+
+.preparing-screen{
+position:fixed;
+inset:0;
+background:#111;
+z-index:11000;
+display:none;
+align-items:center;
+justify-content:center
+}
+
+.preparing-screen.show{
+display:flex
+}
+
+.preparing-panel{
+width:100%;
+max-width:600px;
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:30px;
+text-align:center;
+background:#111;
+color:#fff
+}
+
+.preparing-vehicle{
+font-size:90px;
+line-height:1;
+margin-bottom:28px;
+animation:vehicleLoading 1s ease-in-out infinite
+}
+
+.preparing-title{
+font-size:25px;
+font-weight:bold;
+margin-bottom:10px
+}
+
+.preparing-subtitle{
+font-size:14px;
+color:#999;
+margin-bottom:30px
+}
+
+.loading-container{
+width:100%;
+max-width:320px
+}
+
+.loading-bar{
+width:100%;
+height:8px;
+background:#292929;
+border-radius:20px;
+overflow:hidden
+}
+
+.loading-progress{
+width:0%;
+height:100%;
+background:#f5c400;
+border-radius:20px;
+transition:width .1s linear
+}
+
+.loading-percent{
+font-size:13px;
+color:#aaa;
+margin-top:10px
+}
+
+@keyframes vehicleLoading{
+
+0%{
+transform:translateX(-8px) scale(1)
+}
+
+50%{
+transform:translateX(8px) scale(1.05)
+}
+
+100%{
+transform:translateX(-8px) scale(1)
+}
+
+}
+
+</style>
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-
 
 /* ================================= */
 /* PRECIOS                           */
@@ -930,16 +1038,6 @@ let confirmMap=null;
 let confirmRouteLine=null;
 
 let selectedVehicle="Moto";
-
-/*
-IMPORTANTE:
-
-Esta variable evita que el movimiento
-automático del mapa producido por
-fitBounds() sea confundido con el
-movimiento que hace el cliente.
-
-*/
 
 let actualizandoConfirmacion=false;
 
@@ -1245,8 +1343,6 @@ coord[0]
 );
 
 
-/* RUTA AZUL CIELO */
-
 routeLine=
 L.polyline(
 coordinates,
@@ -1286,7 +1382,9 @@ status.innerText=
 }
 
 }
-  /* ================================= */
+
+
+/* ================================= */
 /* ACTUALIZAR PRECIOS                */
 /* ================================= */
 
@@ -1738,8 +1836,6 @@ document.getElementById(
 );
 
 
-/* Crear mapa una sola vez */
-
 if(!confirmMap){
 
 confirmMap=
@@ -1762,27 +1858,9 @@ confirmMap
 );
 
 
-/*
-CORRECCIÓN IMPORTANTE
-
-El evento moveend se registra
-justo después de crear el mapa.
-
-Así sí detecta cada vez que
-el cliente mueve el mapa.
-*/
-
 confirmMap.on(
 "moveend",
 async function(){
-
-/*
-Si estamos actualizando el mapa
-internamente, no hacemos nada.
-
-Esto evita que fitBounds()
-vuelva a disparar el proceso.
-*/
 
 if(actualizandoConfirmacion){
 
@@ -1791,22 +1869,9 @@ return;
 }
 
 
-/*
-Obtenemos el centro exacto
-del mapa.
-
-El pin amarillo permanece
-en el centro de la pantalla.
-*/
-
 const centro=
 confirmMap.getCenter();
 
-
-/*
-Actualizamos la recogida
-con la nueva posición.
-*/
 
 pickupLat=
 centro.lat;
@@ -1814,11 +1879,6 @@ centro.lat;
 pickupLng=
 centro.lng;
 
-
-/*
-Actualizamos también el marcador
-del mapa principal.
-*/
 
 if(pickupMarker){
 
@@ -1845,22 +1905,12 @@ icon:pickupIcon()
 }
 
 
-/*
-Actualizamos dirección,
-ruta, kilómetros y precio.
-*/
-
 await actualizarConfirmacion();
 
 });
 
 }
 
-
-/*
-Centrar mapa exactamente
-en el punto de recogida.
-*/
 
 actualizandoConfirmacion=true;
 
@@ -1874,10 +1924,6 @@ pickupLng
 );
 
 
-/*
-Actualizar tamaño del mapa.
-*/
-
 setTimeout(
 function(){
 
@@ -1889,11 +1935,6 @@ actualizandoConfirmacion=false;
 250
 );
 
-
-/*
-Actualizar inmediatamente
-todos los datos.
-*/
 
 actualizarConfirmacion();
 
@@ -1916,20 +1957,11 @@ return;
 }
 
 
-/*
-Mientras se obtiene la dirección
-mostramos este mensaje.
-*/
-
 document.getElementById(
 "confirmPickupAddress"
 ).innerText=
 "Actualizando dirección...";
 
-
-/*
-Obtener nueva dirección.
-*/
 
 const direccion=
 await obtenerDireccion(
@@ -1938,32 +1970,15 @@ pickupLng
 );
 
 
-/*
-Mostrar nueva dirección.
-*/
-
 document.getElementById(
 "confirmPickupAddress"
 ).innerText=
 direccion;
 
 
-/*
-También actualizamos la dirección
-principal de recogida.
-
-Así todo queda sincronizado.
-*/
-
 pickupAddress.innerText=
 direccion;
 
-
-/*
-Ahora recalculamos completamente
-la ruta desde la nueva recogida
-hasta el destino.
-*/
 
 await calcularRutaConfirmacion();
 
@@ -1987,11 +2002,6 @@ return;
 
 }
 
-
-/*
-Avisar visualmente que estamos
-recalculando.
-*/
 
 document.getElementById(
 "confirmDistance"
@@ -2053,21 +2063,9 @@ const route=
 data.routes[0];
 
 
-/*
-NUEVA DISTANCIA
-
-La distancia se calcula
-nuevamente desde el nuevo
-punto de recogida.
-*/
-
 routeDistanceKm=
 route.distance/1000;
 
-
-/*
-Eliminar ruta anterior.
-*/
 
 if(confirmRouteLine){
 
@@ -2077,11 +2075,6 @@ confirmRouteLine
 
 }
 
-
-/*
-Convertir coordenadas de OSRM
-a coordenadas Leaflet.
-*/
 
 const coordinates=
 route.geometry.coordinates.map(
@@ -2096,10 +2089,6 @@ coord[0]
 );
 
 
-/*
-Dibujar nueva ruta.
-*/
-
 confirmRouteLine=
 L.polyline(
 coordinates,
@@ -2113,21 +2102,12 @@ confirmMap
 );
 
 
-/*
-Actualizar distancia.
-*/
-
 document.getElementById(
 "confirmDistance"
 ).innerText=
 routeDistanceKm.toFixed(1)+
 " km";
 
-
-/*
-Calcular nuevo precio
-según el vehículo seleccionado.
-*/
 
 let precio=0;
 
@@ -2151,30 +2131,12 @@ routeDistanceKm
 }
 
 
-/*
-Actualizar precio.
-*/
-
 document.getElementById(
 "confirmPrice"
 ).innerText=
 "$"+
 precio.toFixed(2);
 
-
-/*
-IMPORTANTE:
-
-No usamos fitBounds() aquí.
-
-El cliente está moviendo el mapa
-manualmente y el pin debe permanecer
-exactamente en el centro.
-
-Si hacemos fitBounds(), el mapa
-volvería a moverse solo.
-
-*/
 
 }catch(error){
 
@@ -2243,16 +2205,6 @@ document.getElementById(
 "confirmTripButton"
 ).onclick=function(){
 
-/*
-El precio utilizado aquí es
-el último precio calculado.
-
-Como routeDistanceKm se actualiza
-cada vez que el cliente mueve el mapa,
-este será el precio correspondiente
-a la última ubicación seleccionada.
-*/
-
 const precio=
 selectedVehicle==="Moto"
 ?
@@ -2266,7 +2218,7 @@ routeDistanceKm
 
 
 /*
-Cerrar confirmación.
+Cerrar mapa de confirmación.
 */
 
 document.getElementById(
@@ -2277,28 +2229,146 @@ document.getElementById(
 
 
 /*
-Mostrar resumen final.
+Seleccionar vehículo visual.
 */
 
-alert(
+const preparingVehicle=
+document.getElementById(
+"preparingVehicle"
+);
 
-"Viaje iniciado\n\n"+
-"Vehículo: "+
-selectedVehicle+
-"\n\n"+
-"Recogida: "+
-pickupAddress.innerText+
-"\n\n"+
-"Destino: "+
-destinationAddress.innerText+
-"\n\n"+
-"Distancia: "+
-routeDistanceKm.toFixed(1)+
-" km"+
-"\n\n"+
-"Precio: $"+
-precio.toFixed(2)
 
+if(
+selectedVehicle==="Moto"
+){
+
+preparingVehicle.innerText="🏍️";
+
+}else{
+
+preparingVehicle.innerText="🚗";
+
+}
+
+
+/*
+Mostrar pantalla de preparación.
+*/
+
+const preparingScreen=
+document.getElementById(
+"preparingScreen"
+);
+
+
+preparingScreen.classList.add(
+"show"
+);
+
+
+/*
+Reiniciar carga.
+*/
+
+const loadingProgress=
+document.getElementById(
+"loadingProgress"
+);
+
+
+const loadingPercent=
+document.getElementById(
+"loadingPercent"
+);
+
+
+loadingProgress.style.width="0%";
+
+loadingPercent.innerText="0%";
+
+
+/*
+Reiniciar textos.
+*/
+
+document.querySelector(
+".preparing-title"
+).innerText=
+"Preparando tu viaje";
+
+
+document.querySelector(
+".preparing-subtitle"
+).innerText=
+"Enviando solicitud de transporte...";
+
+
+/*
+Temporizador de 5 segundos.
+*/
+
+const inicio=
+Date.now();
+
+
+const duracion=5000;
+
+
+const intervalo=
+setInterval(
+function(){
+
+const transcurrido=
+Date.now()-inicio;
+
+
+let porcentaje=
+(transcurrido/duracion)*100;
+
+
+if(
+porcentaje>100
+){
+
+porcentaje=100;
+
+}
+
+
+loadingProgress.style.width=
+porcentaje+
+"%";
+
+
+loadingPercent.innerText=
+Math.floor(porcentaje)+
+"%";
+
+
+if(
+transcurrido>=duracion
+){
+
+clearInterval(
+intervalo
+);
+
+
+document.querySelector(
+".preparing-title"
+).innerText=
+"Solicitud enviada";
+
+
+document.querySelector(
+".preparing-subtitle"
+).innerText=
+"Estamos buscando tu transporte...";
+
+}
+
+},
+100
 );
 
 };
@@ -2394,4 +2464,4 @@ timeout:10000
 
 </body>
 
-</html>
+  </html>
