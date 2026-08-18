@@ -8,7 +8,7 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-<title>Prueba 5</title>
+<title>Solicita tu transporte</title>
 
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -850,8 +850,7 @@ $0.00
 
 <div class="confirm-footer">
 
-<button id="confirmTripButton"
-class="confirm-button">
+<button id="confirmTripButton" class="confirm-button">
 
 CONFIRMAR EL INICIO DE VIAJE
 
@@ -865,15 +864,21 @@ CONFIRMAR EL INICIO DE VIAJE
 </div>
 
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
 
+
+/* ================================= */
+/* PRECIOS                           */
+/* ================================= */
+
 const PRECIO_MINIMO_MOTO=35;
+
 const PRECIO_ADICIONAL_MOTO=5;
 
 const PRECIO_MINIMO_CARRO=50;
+
 const PRECIO_ADICIONAL_CARRO=9.60;
 
 
@@ -887,6 +892,7 @@ zoomControl:true
 [21.1561,-100.9333],
 15
 );
+
 
 L.tileLayer(
 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -902,12 +908,15 @@ attribution:"© OpenStreetMap"
 /* ================================= */
 
 let pickupLat=null;
+
 let pickupLng=null;
 
 let destinationLat=null;
+
 let destinationLng=null;
 
 let pickupMarker=null;
+
 let destinationMarker=null;
 
 let routeLine=null;
@@ -917,11 +926,22 @@ let routeDistanceKm=0;
 let mode="pickup";
 
 let confirmMap=null;
+
 let confirmRouteLine=null;
 
-let confirmPickupMarker=null;
-
 let selectedVehicle="Moto";
+
+/*
+IMPORTANTE:
+
+Esta variable evita que el movimiento
+automático del mapa producido por
+fitBounds() sea confundido con el
+movimiento que hace el cliente.
+
+*/
+
+let actualizandoConfirmacion=false;
 
 
 /* ================================= */
@@ -931,17 +951,22 @@ let selectedVehicle="Moto";
 const pickupMode=
 document.getElementById("pickupMode");
 
+
 const destinationMode=
 document.getElementById("destinationMode");
+
 
 const pickupAddress=
 document.getElementById("pickupAddress");
 
+
 const destinationAddress=
 document.getElementById("destinationAddress");
 
+
 const startButton=
 document.getElementById("startButton");
+
 
 const status=
 document.getElementById("status");
@@ -1003,13 +1028,17 @@ function seleccionarModo(tipo){
 
 mode=tipo;
 
+
 if(tipo==="pickup"){
 
 pickupMode.classList.add("active");
 
 destinationMode.classList.remove("active");
 
-document.getElementById("subtitle").innerText=
+
+document.getElementById(
+"subtitle"
+).innerText=
 "Selecciona el lugar donde te recogeremos.";
 
 }else{
@@ -1018,7 +1047,10 @@ destinationMode.classList.add("active");
 
 pickupMode.classList.remove("active");
 
-document.getElementById("subtitle").innerText=
+
+document.getElementById(
+"subtitle"
+).innerText=
 "Selecciona el lugar donde quieres llegar.";
 
 }
@@ -1055,11 +1087,14 @@ const url=
 "&zoom=18"+
 "&addressdetails=1";
 
+
 const response=
 await fetch(url);
 
+
 const data=
 await response.json();
+
 
 if(
 data &&
@@ -1070,7 +1105,9 @@ return data.display_name;
 
 }
 
+
 return "Dirección no disponible";
+
 
 }catch(error){
 
@@ -1095,6 +1132,7 @@ return PRECIO_MINIMO_MOTO;
 
 }
 
+
 return PRECIO_MINIMO_MOTO+
 (Math.ceil(km)-1)*
 PRECIO_ADICIONAL_MOTO;
@@ -1113,6 +1151,7 @@ if(km<=1){
 return PRECIO_MINIMO_CARRO;
 
 }
+
 
 return PRECIO_MINIMO_CARRO+
 (Math.ceil(km)-1)*
@@ -1136,6 +1175,7 @@ return;
 
 }
 
+
 status.innerText=
 "Calculando ruta...";
 
@@ -1156,6 +1196,7 @@ destinationLat+
 
 const response=
 await fetch(url);
+
 
 const data=
 await response.json();
@@ -1184,7 +1225,9 @@ route.distance/1000;
 
 if(routeLine){
 
-map.removeLayer(routeLine);
+map.removeLayer(
+routeLine
+);
 
 }
 
@@ -1236,15 +1279,14 @@ routeDistanceKm.toFixed(1)+
 
 console.log(error);
 
+
 status.innerText=
 "No se pudo calcular la ruta.";
 
 }
 
 }
-
-
-/* ================================= */
+  /* ================================= */
 /* ACTUALIZAR PRECIOS                */
 /* ================================= */
 
@@ -1254,6 +1296,7 @@ const motoPrecio=
 calcularPrecioMoto(
 routeDistanceKm
 );
+
 
 const carroPrecio=
 calcularPrecioCarro(
@@ -1336,6 +1379,7 @@ icon:pickupIcon()
 pickupAddress.innerText=
 "Obteniendo dirección...";
 
+
 pickupAddress.classList.remove(
 "waiting"
 );
@@ -1388,6 +1432,7 @@ icon:destinationIcon()
 
 destinationAddress.innerText=
 "Obteniendo dirección...";
+
 
 destinationAddress.classList.remove(
 "waiting"
@@ -1705,6 +1750,7 @@ zoomControl:true
 }
 );
 
+
 L.tileLayer(
 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 {
@@ -1715,243 +1761,52 @@ attribution:"© OpenStreetMap"
 confirmMap
 );
 
-}
 
+/*
+CORRECCIÓN IMPORTANTE
 
-/* Centrar mapa en recogida */
+El evento moveend se registra
+justo después de crear el mapa.
 
-confirmMap.setView(
-[
-pickupLat,
-pickupLng
-],
-17
-);
-
-
-/* Actualizar tamaño */
-
-setTimeout(
-function(){
-
-confirmMap.invalidateSize();
-
-},
-250
-);
-
-
-/* Actualizar información */
-
-actualizarConfirmacion();
-
-}
-
-
-/* ================================= */
-/* ACTUALIZAR CONFIRMACIÓN           */
-/* ================================= */
-
-async function actualizarConfirmacion(){
-
-if(
-pickupLat===null ||
-pickupLng===null
-){
-
-return;
-
-}
-
-
-document.getElementById(
-"confirmPickupAddress"
-).innerText=
-"Obteniendo dirección...";
-
-
-const direccion=
-await obtenerDireccion(
-pickupLat,
-pickupLng
-);
-
-
-document.getElementById(
-"confirmPickupAddress"
-).innerText=
-direccion;
-
-
-/* Volver a calcular ruta */
-
-await calcularRutaConfirmacion();
-
-}
-
-
-/* ================================= */
-/* CALCULAR RUTA CONFIRMACIÓN        */
-/* ================================= */
-
-async function calcularRutaConfirmacion(){
-
-if(
-pickupLat===null ||
-destinationLat===null
-){
-
-return;
-
-}
-
-
-try{
-
-const url=
-"https://router.project-osrm.org/route/v1/driving/"+
-pickupLng+
-","+
-pickupLat+
-";"+
-destinationLng+
-","+
-destinationLat+
-"?overview=full&geometries=geojson";
-
-
-const response=
-await fetch(url);
-
-const data=
-await response.json();
-
-
-if(
-!data.routes ||
-data.routes.length===0
-){
-
-return;
-
-}
-
-
-const route=
-data.routes[0];
-
-
-routeDistanceKm=
-route.distance/1000;
-
-
-if(confirmRouteLine){
-
-confirmMap.removeLayer(
-confirmRouteLine
-);
-
-}
-
-
-const coordinates=
-route.geometry.coordinates.map(
-function(coord){
-
-return[
-coord[1],
-coord[0]
-];
-
-}
-);
-
-
-confirmRouteLine=
-L.polyline(
-coordinates,
-{
-color:"#38BDF8",
-weight:6,
-opacity:.95
-}
-).addTo(
-confirmMap
-);
-
-
-/* Actualizar kilómetros */
-
-document.getElementById(
-"confirmDistance"
-).innerText=
-routeDistanceKm.toFixed(1)+
-" km";
-
-
-/* Actualizar precio según vehículo */
-
-let precio=0;
-
-
-if(
-selectedVehicle==="Moto"
-){
-
-precio=
-calcularPrecioMoto(
-routeDistanceKm
-);
-
-}else{
-
-precio=
-calcularPrecioCarro(
-routeDistanceKm
-);
-
-}
-
-
-document.getElementById(
-"confirmPrice"
-).innerText=
-"$"+
-precio.toFixed(2);
-
-
-/* Mostrar toda la ruta */
-
-confirmMap.fitBounds(
-confirmRouteLine.getBounds(),
-{
-padding:[45,45]
-}
-);
-
-
-}catch(error){
-
-console.log(error);
-
-}
-
-}
-
-
-/* ================================= */
-/* MOVER MAPA PARA CAMBIAR RECOGIDA  */
-/* ================================= */
-
-if(confirmMap){
+Así sí detecta cada vez que
+el cliente mueve el mapa.
+*/
 
 confirmMap.on(
 "moveend",
 async function(){
 
+/*
+Si estamos actualizando el mapa
+internamente, no hacemos nada.
+
+Esto evita que fitBounds()
+vuelva a disparar el proceso.
+*/
+
+if(actualizandoConfirmacion){
+
+return;
+
+}
+
+
+/*
+Obtenemos el centro exacto
+del mapa.
+
+El pin amarillo permanece
+en el centro de la pantalla.
+*/
+
 const centro=
 confirmMap.getCenter();
 
+
+/*
+Actualizamos la recogida
+con la nueva posición.
+*/
 
 pickupLat=
 centro.lat;
@@ -1961,8 +1816,8 @@ centro.lng;
 
 
 /*
-Actualizamos el marcador
-del mapa principal
+Actualizamos también el marcador
+del mapa principal.
 */
 
 if(pickupMarker){
@@ -1991,14 +1846,353 @@ icon:pickupIcon()
 
 
 /*
-Actualizar dirección,
-kilómetros y precio
+Actualizamos dirección,
+ruta, kilómetros y precio.
 */
 
 await actualizarConfirmacion();
 
+});
+
+}
+
+
+/*
+Centrar mapa exactamente
+en el punto de recogida.
+*/
+
+actualizandoConfirmacion=true;
+
+
+confirmMap.setView(
+[
+pickupLat,
+pickupLng
+],
+17
+);
+
+
+/*
+Actualizar tamaño del mapa.
+*/
+
+setTimeout(
+function(){
+
+confirmMap.invalidateSize();
+
+actualizandoConfirmacion=false;
+
+},
+250
+);
+
+
+/*
+Actualizar inmediatamente
+todos los datos.
+*/
+
+actualizarConfirmacion();
+
+}
+
+
+/* ================================= */
+/* ACTUALIZAR CONFIRMACIÓN           */
+/* ================================= */
+
+async function actualizarConfirmacion(){
+
+if(
+pickupLat===null ||
+pickupLng===null
+){
+
+return;
+
+}
+
+
+/*
+Mientras se obtiene la dirección
+mostramos este mensaje.
+*/
+
+document.getElementById(
+"confirmPickupAddress"
+).innerText=
+"Actualizando dirección...";
+
+
+/*
+Obtener nueva dirección.
+*/
+
+const direccion=
+await obtenerDireccion(
+pickupLat,
+pickupLng
+);
+
+
+/*
+Mostrar nueva dirección.
+*/
+
+document.getElementById(
+"confirmPickupAddress"
+).innerText=
+direccion;
+
+
+/*
+También actualizamos la dirección
+principal de recogida.
+
+Así todo queda sincronizado.
+*/
+
+pickupAddress.innerText=
+direccion;
+
+
+/*
+Ahora recalculamos completamente
+la ruta desde la nueva recogida
+hasta el destino.
+*/
+
+await calcularRutaConfirmacion();
+
+}
+
+
+/* ================================= */
+/* CALCULAR RUTA CONFIRMACIÓN        */
+/* ================================= */
+
+async function calcularRutaConfirmacion(){
+
+if(
+pickupLat===null ||
+pickupLng===null ||
+destinationLat===null ||
+destinationLng===null
+){
+
+return;
+
+}
+
+
+/*
+Avisar visualmente que estamos
+recalculando.
+*/
+
+document.getElementById(
+"confirmDistance"
+).innerText=
+"Calculando...";
+
+
+document.getElementById(
+"confirmPrice"
+).innerText=
+"Calculando...";
+
+
+try{
+
+const url=
+"https://router.project-osrm.org/route/v1/driving/"+
+pickupLng+
+","+
+pickupLat+
+";"+
+destinationLng+
+","+
+destinationLat+
+"?overview=full&geometries=geojson";
+
+
+const response=
+await fetch(url);
+
+
+const data=
+await response.json();
+
+
+if(
+!data.routes ||
+data.routes.length===0
+){
+
+document.getElementById(
+"confirmDistance"
+).innerText=
+"No disponible";
+
+
+document.getElementById(
+"confirmPrice"
+).innerText=
+"No disponible";
+
+
+return;
+
+}
+
+
+const route=
+data.routes[0];
+
+
+/*
+NUEVA DISTANCIA
+
+La distancia se calcula
+nuevamente desde el nuevo
+punto de recogida.
+*/
+
+routeDistanceKm=
+route.distance/1000;
+
+
+/*
+Eliminar ruta anterior.
+*/
+
+if(confirmRouteLine){
+
+confirmMap.removeLayer(
+confirmRouteLine
+);
+
+}
+
+
+/*
+Convertir coordenadas de OSRM
+a coordenadas Leaflet.
+*/
+
+const coordinates=
+route.geometry.coordinates.map(
+function(coord){
+
+return[
+coord[1],
+coord[0]
+];
+
 }
 );
+
+
+/*
+Dibujar nueva ruta.
+*/
+
+confirmRouteLine=
+L.polyline(
+coordinates,
+{
+color:"#38BDF8",
+weight:6,
+opacity:.95
+}
+).addTo(
+confirmMap
+);
+
+
+/*
+Actualizar distancia.
+*/
+
+document.getElementById(
+"confirmDistance"
+).innerText=
+routeDistanceKm.toFixed(1)+
+" km";
+
+
+/*
+Calcular nuevo precio
+según el vehículo seleccionado.
+*/
+
+let precio=0;
+
+
+if(
+selectedVehicle==="Moto"
+){
+
+precio=
+calcularPrecioMoto(
+routeDistanceKm
+);
+
+}else{
+
+precio=
+calcularPrecioCarro(
+routeDistanceKm
+);
+
+}
+
+
+/*
+Actualizar precio.
+*/
+
+document.getElementById(
+"confirmPrice"
+).innerText=
+"$"+
+precio.toFixed(2);
+
+
+/*
+IMPORTANTE:
+
+No usamos fitBounds() aquí.
+
+El cliente está moviendo el mapa
+manualmente y el pin debe permanecer
+exactamente en el centro.
+
+Si hacemos fitBounds(), el mapa
+volvería a moverse solo.
+
+*/
+
+}catch(error){
+
+console.log(error);
+
+
+document.getElementById(
+"confirmDistance"
+).innerText=
+"No disponible";
+
+
+document.getElementById(
+"confirmPrice"
+).innerText=
+"No disponible";
+
+}
 
 }
 
@@ -2013,7 +2207,9 @@ document.getElementById(
 
 e.stopPropagation();
 
+
 selectedVehicle="Moto";
+
 
 abrirConfirmacion();
 
@@ -2030,7 +2226,9 @@ document.getElementById(
 
 e.stopPropagation();
 
+
 selectedVehicle="Carro";
+
 
 abrirConfirmacion();
 
@@ -2045,6 +2243,16 @@ document.getElementById(
 "confirmTripButton"
 ).onclick=function(){
 
+/*
+El precio utilizado aquí es
+el último precio calculado.
+
+Como routeDistanceKm se actualiza
+cada vez que el cliente mueve el mapa,
+este será el precio correspondiente
+a la última ubicación seleccionada.
+*/
+
 const precio=
 selectedVehicle==="Moto"
 ?
@@ -2057,12 +2265,20 @@ routeDistanceKm
 );
 
 
+/*
+Cerrar confirmación.
+*/
+
 document.getElementById(
 "confirmScreen"
 ).classList.remove(
 "show"
 );
 
+
+/*
+Mostrar resumen final.
+*/
 
 alert(
 
@@ -2178,4 +2394,4 @@ timeout:10000
 
 </body>
 
-  </html>
+</html>
