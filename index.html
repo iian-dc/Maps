@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Prueba 2</title>
+<title>Prueba 3</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box}
@@ -817,9 +817,7 @@ ajustarMapaConfirmacion();
 
 },250);
 
-}
-
-async function cambiarPuntoRecogida(lat,lng){
+}async function cambiarPuntoRecogida(lat,lng){
 
 pickupLat=lat;
 pickupLng=lng;
@@ -843,4 +841,172 @@ try{
 
 const url="https://router.project-osrm.org/route/v1/driving/"+pickupLng+","+pickupLat+";"+destinationLng+","+destinationLat+"?overview=full&geometries=geojson";
 
-const response=awa
+const response=await fetch(url);
+
+if(!response.ok){
+throw new Error("Error de ruta");
+}
+
+const data=await response.json();
+
+if(requestId!==routeRequestId){
+return;
+}
+
+if(!data.routes||data.routes.length===0){
+
+document.getElementById("confirmStatus").innerText="No se encontró una ruta desde este punto.";
+
+return;
+
+}
+
+const route=data.routes[0];
+
+routeDistanceKm=route.distance/1000;
+
+const coordinates=route.geometry.coordinates.map(function(coord){
+return[coord[1],coord[0]];
+});
+
+if(confirmRouteLine){
+confirmMap.removeLayer(confirmRouteLine);
+}
+
+confirmRouteLine=L.polyline(coordinates,{
+color:"#f5c400",
+weight:6,
+opacity:.9
+}).addTo(confirmMap);
+
+if(routeLine){
+map.removeLayer(routeLine);
+}
+
+routeLine=L.polyline(coordinates,{
+color:"#f5c400",
+weight:6,
+opacity:.9
+}).addTo(map);
+
+actualizarPrecios();
+actualizarPanelConfirmacion();
+
+document.getElementById("confirmStatus").innerText="Actualizado : "+routeDistanceKm.toFixed(1)+" km";
+
+ajustarMapaConfirmacion();
+
+}catch(error){
+
+console.log(error);
+
+document.getElementById("confirmStatus").innerText="No se pudo
+
+document.getElementById("confirmStatus").innerText="No se pudo
+actualizar la ruta.";
+
+}
+
+}
+
+document.getElementById("motoStart").onclick=function(e){
+
+e.stopPropagation();
+
+selectedVehicle="Moto";
+
+abrirConfirmacion();
+
+};
+
+document.getElementById("carStart").onclick=function(e){
+
+e.stopPropagation();
+
+selectedVehicle="Carro";
+
+abrirConfirmacion();
+
+};
+
+document.getElementById("closeVehicle").onclick=function(){
+
+document.getElementById("vehicleScreen").classList.remove("show
+");
+
+};
+
+document.getElementById("confirmBack").onclick=function(){
+
+document.getElementById("confirmScreen").classList.remove("show
+");
+document.getElementById("vehicleScreen").classList.add("show");
+
+};
+
+document.getElementById("confirmSearch").onclick=function(){
+
+if(!confirmMap){
+return;
+}
+
+confirmMap.setView([pickupLat,pickupLng],17);
+
+};
+
+document.getElementById("confirmStartButton").onclick=function(
+){
+
+if(pickupLat===null||destinationLat===null){
+return;
+}
+
+if(routeDistanceKm<=0){
+return;
+}
+
+const precio=obtenerPrecioVehiculo();
+
+alert(
+"Viaje iniciado\n\n"+
+"Vehículo: "+selectedVehicle+"\n"+
+"Punto de partida: "+pickupAddress.innerText+"\n"+
+"Destino: "+destinationAddress.innerText+"\n"+
+"Distancia: "+routeDistanceKm.toFixed(1)+" km\n"+
+"Precio: $"+precio.toFixed(2)
+);
+
+};
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+map.setView([
+position.coords.latitude,
+position.coords.longitude
+],15);
+
+},
+
+function(){
+
+map.setView([21.1561,-100.9333],15);
+
+},
+
+{
+enableHighAccuracy:true,
+timeout:10000
+}
+
+);
+
+}
+
+</script>
+
+</body>
+</html>
