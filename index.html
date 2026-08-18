@@ -334,7 +334,7 @@ font-size:14px
 
 
 /* ================================= */
-/* CONFIRMACIÓN                      */
+/* VENTANA DE CONFIRMACIÓN           */
 /* ================================= */
 
 .confirm-screen{
@@ -533,19 +533,116 @@ cursor:pointer
 .confirm-button:active{
 transform:scale(.99)
 }
-  </style>
+
+
+/* ================================= */
+/* VENTANA PREPARANDO TU VIAJE       */
+/* ================================= */
+
+.preparing-screen{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+background:#111;
+z-index:20000;
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+
+.preparing-screen.show{
+display:flex
+}
+
+.preparing-card{
+width:100%;
+max-width:420px;
+background:#181818;
+border-radius:24px;
+padding:35px 25px;
+text-align:center;
+box-shadow:0 10px 40px rgba(0,0,0,.5);
+color:#fff
+}
+
+.preparing-vehicle{
+font-size:75px;
+height:95px;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:10px;
+animation:vehiculoCargando 1s infinite ease-in-out
+}
+
+@keyframes vehiculoCargando{
+
+0%{
+transform:translateX(-8px)
+}
+
+50%{
+transform:translateX(8px)
+}
+
+100%{
+transform:translateX(-8px)
+}
+
+}
+
+.preparing-title{
+font-size:24px;
+font-weight:bold;
+margin-bottom:10px
+}
+
+.preparing-subtitle{
+font-size:14px;
+color:#aaa;
+line-height:20px;
+margin-bottom:25px
+}
+
+.loading-container{
+width:100%;
+height:12px;
+background:#333;
+border-radius:20px;
+overflow:hidden;
+margin-bottom:12px
+}
+
+.loading-progress{
+width:0%;
+height:100%;
+background:#f5c400;
+border-radius:20px;
+transition:width .05s linear
+}
+
+.loading-percent{
+font-size:18px;
+font-weight:bold;
+color:#f5c400;
+margin-top:5px
+}
+
+</style>
 
 </head>
 
 <body>
-
-<div class="app">
+  <div class="app">
 
 <div class="map-container">
 
 <div id="map"></div>
 
 </div>
+
 
 <div class="panel">
 
@@ -556,6 +653,7 @@ Solicita tu transporte
 <div class="subtitle" id="subtitle">
 Selecciona el lugar donde te recogeremos.
 </div>
+
 
 <div class="mode">
 
@@ -569,9 +667,12 @@ Destino
 
 </div>
 
-<button id="locationButton" class="location-button">
+
+<button id="locationButton"
+class="location-button">
 USAR MI UBICACIÓN ACTUAL
 </button>
+
 
 <div class="step">
 
@@ -579,11 +680,13 @@ USAR MI UBICACIÓN ACTUAL
 PUNTO DE RECOGIDA
 </div>
 
-<div id="pickupAddress" class="address waiting">
+<div id="pickupAddress"
+class="address waiting">
 Toca el mapa para seleccionar
 </div>
 
 </div>
+
 
 <div class="step">
 
@@ -591,17 +694,23 @@ Toca el mapa para seleccionar
 DESTINO
 </div>
 
-<div id="destinationAddress" class="address waiting">
+<div id="destinationAddress"
+class="address waiting">
 Toca el mapa para seleccionar
 </div>
 
 </div>
 
-<button id="startButton" class="start-button" disabled>
+
+<button id="startButton"
+class="start-button"
+disabled>
 INICIAR
 </button>
 
-<div id="status" class="status"></div>
+
+<div id="status"
+class="status"></div>
 
 </div>
 
@@ -612,7 +721,8 @@ INICIAR
 <!-- VENTANA DE VEHÍCULOS              -->
 <!-- ================================= -->
 
-<div id="vehicleScreen" class="vehicle-screen">
+<div id="vehicleScreen"
+class="vehicle-screen">
 
 <div class="vehicle-panel">
 
@@ -626,7 +736,9 @@ Elige tu vehículo
 Selecciona cómo deseas realizar tu viaje
 </div>
 
-<div id="motoOption" class="vehicle-option">
+
+<div id="motoOption"
+class="vehicle-option">
 
 <div class="vehicle-icon">
 🏍️
@@ -642,26 +754,32 @@ Moto
 Transporte en motocicleta
 </div>
 
-<div id="motoDistance" class="vehicle-distance">
+<div id="motoDistance"
+class="vehicle-distance">
 Distancia: calculando...
 </div>
 
-<div id="motoPrice" class="vehicle-price">
+<div id="motoPrice"
+class="vehicle-price">
 $0.00
 </div>
 
-<button id="motoStart" class="vehicle-start">
+<button id="motoStart"
+class="vehicle-start">
 INICIAR VIAJE
 </button>
 
 </div>
 
-<div id="motoCheck" class="vehicle-check"></div>
+<div id="motoCheck"
+class="vehicle-check">
+</div>
 
 </div>
 
 
-<div id="carOption" class="vehicle-option">
+<div id="carOption"
+class="vehicle-option">
 
 <div class="vehicle-icon">
 🚗
@@ -677,25 +795,32 @@ Carro
 Transporte en automóvil
 </div>
 
-<div id="carDistance" class="vehicle-distance">
+<div id="carDistance"
+class="vehicle-distance">
 Distancia: calculando...
 </div>
 
-<div id="carPrice" class="vehicle-price">
+<div id="carPrice"
+class="vehicle-price">
 $0.00
 </div>
 
-<button id="carStart" class="vehicle-start">
+<button id="carStart"
+class="vehicle-start">
 INICIAR VIAJE
 </button>
 
 </div>
 
-<div id="carCheck" class="vehicle-check"></div>
+<div id="carCheck"
+class="vehicle-check">
+</div>
 
 </div>
 
-<button id="closeVehicle" class="close-button">
+
+<button id="closeVehicle"
+class="close-button">
 Volver
 </button>
 
@@ -708,9 +833,11 @@ Volver
 <!-- VENTANA DE CONFIRMACIÓN           -->
 <!-- ================================= -->
 
-<div id="confirmScreen" class="confirm-screen">
+<div id="confirmScreen"
+class="confirm-screen">
 
 <div class="confirm-panel">
+
 
 <div class="confirm-header">
 
@@ -730,9 +857,11 @@ Confirma el punto de partida
 
 <div id="confirmMap"></div>
 
+
 <div class="confirm-map-message">
 Mueve el mapa y coloca el punto exactamente donde quieres que te recojamos
 </div>
+
 
 <div class="confirm-center-marker">
 
@@ -748,6 +877,7 @@ Mueve el mapa y coloca el punto exactamente donde quieres que te recojamos
 
 
 <div class="confirm-info">
+
 
 <div class="confirm-section">
 
@@ -766,6 +896,7 @@ Selecciona el punto de recogida en el mapa
 
 
 <div class="confirm-route-info">
+
 
 <div class="confirm-route-box">
 
@@ -816,7 +947,7 @@ CONFIRMAR EL INICIO DE VIAJE
 
 
 <!-- ================================= -->
-<!-- VENTANA PREPARANDO VIAJE          -->
+<!-- PANTALLA PREPARANDO EL VIAJE      -->
 <!-- ================================= -->
 
 <div id="preparingScreen"
@@ -824,18 +955,22 @@ class="preparing-screen">
 
 <div class="preparing-card">
 
+
 <div id="preparingVehicle"
 class="preparing-vehicle">
 🏍️
 </div>
 
+
 <div class="preparing-title">
 Preparando tu viaje
 </div>
 
+
 <div class="preparing-subtitle">
 Estamos enviando tu solicitud al transporte
 </div>
+
 
 <div class="loading-container">
 
@@ -845,10 +980,12 @@ class="loading-progress">
 
 </div>
 
+
 <div id="loadingPercent"
 class="loading-percent">
 0%
 </div>
+
 
 </div>
 
@@ -856,6 +993,7 @@ class="loading-percent">
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 
 <script>
 
@@ -930,22 +1068,34 @@ let actualizandoConfirmacion=false;
 /* ================================= */
 
 const pickupMode=
-document.getElementById("pickupMode");
+document.getElementById(
+"pickupMode"
+);
 
 const destinationMode=
-document.getElementById("destinationMode");
+document.getElementById(
+"destinationMode"
+);
 
 const pickupAddress=
-document.getElementById("pickupAddress");
+document.getElementById(
+"pickupAddress"
+);
 
 const destinationAddress=
-document.getElementById("destinationAddress");
+document.getElementById(
+"destinationAddress"
+);
 
 const startButton=
-document.getElementById("startButton");
+document.getElementById(
+"startButton"
+);
 
 const status=
-document.getElementById("status");
+document.getElementById(
+"status"
+);
 
 
 /* ================================= */
@@ -1004,11 +1154,17 @@ function seleccionarModo(tipo){
 
 mode=tipo;
 
+
 if(tipo==="pickup"){
 
-pickupMode.classList.add("active");
+pickupMode.classList.add(
+"active"
+);
 
-destinationMode.classList.remove("active");
+destinationMode.classList.remove(
+"active"
+);
+
 
 document.getElementById(
 "subtitle"
@@ -1017,9 +1173,14 @@ document.getElementById(
 
 }else{
 
-destinationMode.classList.add("active");
+destinationMode.classList.add(
+"active"
+);
 
-pickupMode.classList.remove("active");
+pickupMode.classList.remove(
+"active"
+);
+
 
 document.getElementById(
 "subtitle"
@@ -1033,14 +1194,18 @@ document.getElementById(
 
 pickupMode.onclick=function(){
 
-seleccionarModo("pickup");
+seleccionarModo(
+"pickup"
+);
 
 };
 
 
 destinationMode.onclick=function(){
 
-seleccionarModo("destination");
+seleccionarModo(
+"destination"
+);
 
 };
 
@@ -1049,7 +1214,10 @@ seleccionarModo("destination");
 /* OBTENER DIRECCIÓN                 */
 /* ================================= */
 
-async function obtenerDireccion(lat,lng){
+async function obtenerDireccion(
+lat,
+lng
+){
 
 try{
 
@@ -1060,11 +1228,14 @@ const url=
 "&zoom=18"+
 "&addressdetails=1";
 
+
 const response=
 await fetch(url);
 
+
 const data=
 await response.json();
+
 
 if(
 data &&
@@ -1075,7 +1246,9 @@ return data.display_name;
 
 }
 
+
 return "Dirección no disponible";
+
 
 }catch(error){
 
@@ -1100,6 +1273,7 @@ return PRECIO_MINIMO_MOTO;
 
 }
 
+
 return PRECIO_MINIMO_MOTO+
 (Math.ceil(km)-1)*
 PRECIO_ADICIONAL_MOTO;
@@ -1118,6 +1292,7 @@ if(km<=1){
 return PRECIO_MINIMO_CARRO;
 
 }
+
 
 return PRECIO_MINIMO_CARRO+
 (Math.ceil(km)-1)*
@@ -1141,8 +1316,10 @@ return;
 
 }
 
+
 status.innerText=
 "Calculando ruta...";
+
 
 try{
 
@@ -1157,11 +1334,14 @@ destinationLng+
 destinationLat+
 "?overview=full&geometries=geojson";
 
+
 const response=
 await fetch(url);
 
+
 const data=
 await response.json();
+
 
 if(
 !data.routes ||
@@ -1175,11 +1355,14 @@ return;
 
 }
 
+
 const route=
 data.routes[0];
 
+
 routeDistanceKm=
 route.distance/1000;
+
 
 if(routeLine){
 
@@ -1188,6 +1371,7 @@ routeLine
 );
 
 }
+
 
 const coordinates=
 route.geometry.coordinates.map(
@@ -1201,6 +1385,7 @@ coord[0]
 }
 );
 
+
 routeLine=
 L.polyline(
 coordinates,
@@ -1211,6 +1396,7 @@ opacity:.95
 }
 ).addTo(map);
 
+
 map.fitBounds(
 routeLine.getBounds(),
 {
@@ -1218,23 +1404,27 @@ padding:[40,40]
 }
 );
 
+
 actualizarPrecios();
+
 
 status.innerText=
 "Ruta seleccionada: "+
 routeDistanceKm.toFixed(1)+
 " km";
 
+
 }catch(error){
 
 console.log(error);
+
 
 status.innerText=
 "No se pudo calcular la ruta.";
 
 }
 
-  }
+}
   /* ================================= */
 /* ACTUALIZAR PRECIOS                */
 /* ================================= */
@@ -1251,6 +1441,7 @@ calcularPrecioCarro(
 routeDistanceKm
 );
 
+
 document.getElementById(
 "motoDistance"
 ).innerText=
@@ -1258,11 +1449,13 @@ document.getElementById(
 routeDistanceKm.toFixed(1)+
 " km";
 
+
 document.getElementById(
 "motoPrice"
 ).innerText=
 "$"+
 motoPrecio.toFixed(2);
+
 
 document.getElementById(
 "carDistance"
@@ -1270,6 +1463,7 @@ document.getElementById(
 "Distancia: "+
 routeDistanceKm.toFixed(1)+
 " km";
+
 
 document.getElementById(
 "carPrice"
@@ -1323,6 +1517,7 @@ icon:pickupIcon()
 pickupAddress.innerText=
 "Obteniendo dirección...";
 
+
 pickupAddress.classList.remove(
 "waiting"
 );
@@ -1375,6 +1570,7 @@ icon:destinationIcon()
 
 destinationAddress.innerText=
 "Obteniendo dirección...";
+
 
 destinationAddress.classList.remove(
 "waiting"
@@ -1604,12 +1800,14 @@ document.getElementById(
 
 document.getElementById(
 "motoCheck"
-).innerText="✓";
+).innerText=
+"✓";
 
 
 document.getElementById(
 "carCheck"
-).innerText="";
+).innerText=
+"";
 
 };
 
@@ -1650,18 +1848,20 @@ document.getElementById(
 
 document.getElementById(
 "carCheck"
-).innerText="✓";
+).innerText=
+"";
 
 
 document.getElementById(
-"motoCheck"
-).innerText="";
+"carCheck"
+).innerText=
+"✓";
 
 };
 
 
 /* ================================= */
-/* ABRIR MAPA DE CONFIRMACIÓN        */
+/* ABRIR CONFIRMACIÓN                */
 /* ================================= */
 
 function abrirConfirmacion(){
@@ -1679,8 +1879,6 @@ document.getElementById(
 "show"
 );
 
-
-/* Crear mapa una sola vez */
 
 if(!confirmMap){
 
@@ -1704,7 +1902,7 @@ confirmMap
 );
 
 
-/* Detectar movimiento del mapa */
+/* Detectar movimiento */
 
 confirmMap.on(
 "moveend",
@@ -1774,8 +1972,6 @@ pickupLng
 );
 
 
-/* Actualizar tamaño */
-
 setTimeout(
 function(){
 
@@ -1787,8 +1983,6 @@ actualizandoConfirmacion=false;
 250
 );
 
-
-/* Actualizar información */
 
 actualizarConfirmacion();
 
@@ -2046,43 +2240,167 @@ abrirConfirmacion();
 
 
 /* ================================= */
-/* CONFIRMAR INICIO DE VIAJE         */
+/* ENVIAR SOLICITUD A WHATSAPP       */
 /* ================================= */
 
-document.getElementById(
-"confirmTripButton"
-).onclick=function(){
+function enviarSolicitudWhatsApp(){
 
-/*
-Cerrar mapa de confirmación
-*/
-
-document.getElementById(
-"confirmScreen"
-).classList.remove(
-"show"
+const precio=
+selectedVehicle==="Moto"
+?
+calcularPrecioMoto(
+routeDistanceKm
+)
+:
+calcularPrecioCarro(
+routeDistanceKm
 );
 
 
 /*
-Mostrar pantalla de preparación
+URL DE GOOGLE MAPS
+
+Esta ruta lleva al conductor
+desde el punto de recogida
+hasta el destino.
 */
 
+const googleMapsURL=
+"https://www.google.com/maps/dir/?api=1"+
+"&origin="+
+encodeURIComponent(
+pickupLat+","+pickupLng
+)+
+"&destination="+
+encodeURIComponent(
+destinationLat+","+destinationLng
+)+
+"&travelmode=driving";
+
+
+/*
+MENSAJE PARA WHATSAPP
+
+Se prepara como una especie
+de factura/resumen del servicio.
+*/
+
+const mensaje=
+
+"🚕 SOLICITUD DE TRANSPORTE\n"+
+"━━━━━━━━━━━━━━━━━━━━\n\n"+
+
+"🚘 SERVICIO: "+
+selectedVehicle+
+"\n\n"+
+
+"📍 PUNTO DE RECOGIDA\n"+
+pickupAddress.innerText+
+"\n\n"+
+
+"🎯 DESTINO\n"+
+destinationAddress.innerText+
+"\n\n"+
+
+"📏 DISTANCIA\n"+
+routeDistanceKm.toFixed(1)+
+" km\n\n"+
+
+"💰 PRECIO\n"+
+"$"+
+precio.toFixed(2)+
+"\n\n"+
+
+"🗺️ RUTA PARA EL CONDUCTOR\n"+
+googleMapsURL+
+"\n\n"+
+
+"📡 GPS\n"+
+"Ubicación del cliente:\n"+
+"https://www.google.com/maps?q="+
+pickupLat+
+","+
+pickupLng+
+"\n\n"+
+
+"━━━━━━━━━━━━━━━━━━━━\n"+
+"Solicitud enviada automáticamente.";
+
+
+/*
+NÚMERO DE WHATSAPP DEL NEGOCIO
+
+México: +52
+Número: 4182371993
+*/
+
+const numeroWhatsApp=
+"524182371993";
+
+
+const whatsappURL=
+"https://wa.me/"+
+numeroWhatsApp+
+"?text="+
+encodeURIComponent(
+mensaje
+);
+
+
+/*
+Abrir WhatsApp.
+
+En Android, si WhatsApp está instalado,
+el sistema normalmente ofrecerá/abrirá
+la aplicación correspondiente.
+*/
+
+window.location.href=
+whatsappURL;
+
+}
+
+
+/* ================================= */
+/* PANTALLA PREPARANDO EL VIAJE      */
+/* ================================= */
+
+function prepararViaje(){
+
+const preparingScreen=
 document.getElementById(
 "preparingScreen"
-).classList.add(
-"show"
 );
-
-
-/*
-Seleccionar icono según vehículo
-*/
 
 const preparingVehicle=
 document.getElementById(
 "preparingVehicle"
 );
+
+const preparingTitle=
+document.querySelector(
+".preparing-title"
+);
+
+const preparingSubtitle=
+document.querySelector(
+".preparing-subtitle"
+);
+
+const loadingProgress=
+document.getElementById(
+"loadingProgress"
+);
+
+const loadingPercent=
+document.getElementById(
+"loadingPercent"
+);
+
+
+/*
+Mostrar vehículo seleccionado.
+*/
 
 if(
 selectedVehicle==="Moto"
@@ -2098,68 +2416,99 @@ preparingVehicle.innerText="🚗";
 
 
 /*
-Reiniciar barra
+Restablecer pantalla.
 */
 
-const loadingProgress=
-document.getElementById(
-"loadingProgress"
-);
+preparingTitle.innerText=
+"Preparando tu viaje";
 
-const loadingPercent=
-document.getElementById(
-"loadingPercent"
-);
-
-
-loadingProgress.style.width="0%";
-
-loadingPercent.innerText="0%";
-
-
-/*
-Animación de 5 segundos
-*/
-
-let progreso=0;
-
-
-const intervalo=
-setInterval(
-function(){
-
-progreso++;
+preparingSubtitle.innerText=
+"Estamos enviando tu solicitud al transporte";
 
 loadingProgress.style.width=
-progreso+"%";
+"0%";
 
 loadingPercent.innerText=
-progreso+"%";
-
-
-if(progreso>=100){
-
-clearInterval(intervalo);
+"0%";
 
 
 /*
-Cambiar mensaje final
+Mostrar pantalla completa.
 */
 
-document.querySelector(
-".preparing-title"
-).innerText=
+preparingScreen.classList.add(
+"show"
+);
+
+
+/*
+Duración total:
+
+5 segundos
+*/
+
+const duracion=
+5000;
+
+const inicio=
+Date.now();
+
+
+function actualizarCarga(){
+
+const transcurrido=
+Date.now()-
+inicio;
+
+
+let porcentaje=
+Math.floor(
+(transcurrido/duracion)*100
+);
+
+
+if(porcentaje>100){
+
+porcentaje=100;
+
+}
+
+
+loadingProgress.style.width=
+porcentaje+
+"%";
+
+
+loadingPercent.innerText=
+porcentaje+
+"%";
+
+
+if(porcentaje<100){
+
+requestAnimationFrame(
+actualizarCarga
+);
+
+}else{
+
+
+/*
+Cuando llega al 100%:
+mostrar solicitud enviada.
+*/
+
+preparingTitle.innerText=
 "Solicitud enviada";
 
 
-document.querySelector(
-".preparing-subtitle"
-).innerText=
-"Tu transporte ha recibido la solicitud";
+preparingSubtitle.innerText=
+"Tu solicitud fue enviada al transporte.";
 
 
 /*
-Después de terminar
+Esperar un momento para que
+el cliente vea el mensaje.
 */
 
 setTimeout(
@@ -2168,26 +2517,53 @@ function(){
 enviarSolicitudWhatsApp();
 
 },
-500
+700
 );
 
 }
 
-},
-50
+}
+
+
+requestAnimationFrame(
+actualizarCarga
 );
 
-};
+}
 
 
 /* ================================= */
-/* ENVIAR SOLICITUD A WHATSAPP       */
+/* CONFIRMAR INICIO DE VIAJE         */
 /* ================================= */
 
-function enviarSolicitudWhatsApp(){
+document.getElementById(
+"confirmTripButton"
+).onclick=function(){
 
 /*
-PRECIO FINAL
+Verificar que existan
+los puntos necesarios.
+*/
+
+if(
+pickupLat===null ||
+pickupLng===null ||
+destinationLat===null ||
+destinationLng===null
+){
+
+alert(
+"Verifica el punto de recogida y el destino."
+);
+
+return;
+
+}
+
+
+/*
+Calcular nuevamente el precio
+con la última ubicación.
 */
 
 const precio=
@@ -2203,114 +2579,35 @@ routeDistanceKm
 
 
 /*
-ENLACE GOOGLE MAPS
+Cerrar pantalla de confirmación.
 */
 
-const googleMapsUrl=
-"https://www.google.com/maps/dir/?api=1"+
-"&origin="+
-pickupLat+
-","+
-pickupLng+
-"&destination="+
-destinationLat+
-","+
-destinationLng+
-"&travelmode=driving";
-
-
-/*
-MENSAJE PARA EL CONDUCTOR
-*/
-
-const mensaje=
-
-"🚕 SOLICITUD DE TRANSPORTE"+
-"\n"+
-"━━━━━━━━━━━━━━━━━━"+
-"\n\n"+
-
-"🚘 SERVICIO"+
-"\n"+
-"Tipo de servicio: "+
-selectedVehicle+
-"\n\n"+
-
-"📍 PUNTO DE RECOGIDA"+
-"\n"+
-pickupAddress.innerText+
-"\n\n"+
-
-"🎯 DESTINO"+
-"\n"+
-destinationAddress.innerText+
-"\n\n"+
-
-"📏 DISTANCIA"+
-"\n"+
-routeDistanceKm.toFixed(1)+
-" km"+
-"\n\n"+
-
-"💰 PRECIO"+
-"\n"+
-"$"+
-precio.toFixed(2)+
-"\n\n"+
-
-"🧭 RUTA PARA EL CONDUCTOR"+
-"\n"+
-googleMapsUrl+
-"\n\n"+
-
-"📡 GPS DEL CLIENTE"+
-"\n"+
-"https://www.google.com/maps?q="+
-pickupLat+
-","+
-pickupLng+
-"\n\n"+
-
-"━━━━━━━━━━━━━━━━━━"+
-"\n"+
-"Solicitud generada automáticamente.";
-
-
-/*
-NÚMERO DE WHATSAPP
-*/
-
-const numero=
-"524182371993";
-
-
-/*
-CREAR ENLACE DE WHATSAPP
-*/
-
-const whatsappUrl=
-"https://wa.me/"+
-numero+
-"?text="+
-encodeURIComponent(
-mensaje
+document.getElementById(
+"confirmScreen"
+).classList.remove(
+"show"
 );
 
 
 /*
-ABRIR WHATSAPP
+Mostrar pantalla de preparación.
+
+IMPORTANTE:
+
+Aquí NO se envía todavía
+el mensaje de WhatsApp.
+
+Primero comienza la carga
+de 0% a 100%.
 */
 
-window.open(
-whatsappUrl,
-"_blank"
-);
+prepararViaje();
 
-}
+};
 
 
 /* ================================= */
-/* VOLVER DE CONFIRMACIÓN            */
+/* VOLVER DE CONFIRMACIÓN             */
 /* ================================= */
 
 document.getElementById(
